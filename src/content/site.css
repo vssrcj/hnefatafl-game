@@ -1,0 +1,40 @@
+rect {
+  width: 70;
+  height: 70;
+  stroke: black;
+  stroke-width: 1;
+}
+.empty {
+  fill: #D6882F;
+}
+.attacker {
+  fill: #00f;
+}
+.defender {
+   fill: #0f0;
+}
+.king {
+   fill: #000;
+}
+.columns {
+  padding: 0;
+}
+.attacker-select {
+   fill: #88f;
+}
+
+.red {
+  fill: #f00;
+}
+.darkblue {
+  fill: #008;
+}
+.darkred {
+  fill: #800;
+}
+.lightblue {
+  fill: #88f;
+}
+.lightred {
+  fill: #f88;
+}
