@@ -24,7 +24,6 @@ function new_board() {
 			rect.setAttribute('class',cls);
 			document.getElementById("svg").appendChild(rect);
 
-
 		}
 	}
 }
@@ -49,22 +48,27 @@ function change_board() {
 
 $(function() {
 
+
 	var from_cell = null;
 
 	$("body").on("click","rect",function(){
 
 		var cls = $(this).attr('class');
-
+		//console.log(cls);
+		//console.log(from_cell);
 		if (cls == "empty" && from_cell != null) {
 
 			var to_cell = $(this).attr('id').split(',');
 			to_cell[0] = parseInt(to_cell[0]);
 			to_cell[1] = parseInt(to_cell[1]);
 
-			if (from_cell[0] == to_cell[0]) {			// same row
+			if (from_cell[0] == to_cell[0]) {
+				console.log(from_cell);		// same row
 				if(from_cell[1] < to_cell[1]) {				// goes right
 					x = from_cell[1] + 1;
+					console.log(x);
 					while(x <= to_cell[1]) {
+						console.log(x);
 						if(BOARD[from_cell[0]][x] != 0) {
 							return clear();
 						}
@@ -109,6 +113,8 @@ $(function() {
 		}
 		else if (cls == "attacker" && from_cell == null) {
 			from_cell = $(this).attr('id').split(',');
+			from_cell[0] = parseInt(from_cell[0]);
+			from_cell[1] = parseInt(from_cell[1]);
 			$(this).attr('class','attacker-select');
 		}
 		else clear();

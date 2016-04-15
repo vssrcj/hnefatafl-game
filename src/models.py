@@ -2,18 +2,75 @@
 
 from google.appengine.ext import ndb
 
-from transport_models import GameForm
+from transport_models import GameForm, StringMessage
 
 from datetime import datetime
 import copy
 
+
+BOARD_WIDTH = 9
+BOARD_HEIGHT = 9
+ATTACKERS = [
+    (0, 3), (0, 4), (0, 5), (1, 4),
+    (3, 0), (4, 0), (5, 0), (4, 1),
+    (3, 8), (4, 8), (5, 8), (4, 7),
+    (8, 3), (8, 4), (8, 5), (7, 4)]
+DEFENDERS = [
+    (2, 4), (3, 4), (4, 5), (4, 6), (5, 4), (6, 4), (4, 2), (4, 3)
+]
+KING = (4, 4)
+
+
 class Player(ndb.Model):
     email = ndb.StringProperty(required=True)
+    name = ndb.StringProperty(required=True)
 
     @classmethod
     def new_player(cls, email):
         player = Player(email=email)
         player.put()
+        return player
+
+    def games(self):
+        games = Game.query(Game.player == self.key)
+        return_value = []
+        for game in games:
+            return_value.append((str(game.created), str(game.key.urlsafe())))
+        return StringMessage(message=str(return_value))
+
+
+class Board():
+    def __init__(self, values):
+        self.values = values
+        self.current = 0
+        self.max = len(values)
+
+    def __iter__(self):
+        return self
+
+    def __getitem__(self, cell):
+        y, x = cell
+        if y < 0 or y >= BOARD_HEIGHT or x < 0 or x >= BOARD_WIDTH:
+            return None
+        else:
+            return self.values[y][x]
+
+    def __setitem__(self, cell, value):
+        self.values[cell[0]][cell[1]] = value
+
+    def next(self):
+        if self.current == self.max:
+            raise StopIteration
+        else:
+            self.current += 1
+            return self.values[self.current-1]
+
+    def copy(self):
+        values = copy.deepcopy(self.values)
+        return Board(values)
+
+    def row_length(self, row):
+        return len(self.values[row])
 
 
 class Game(ndb.Model):
@@ -43,24 +100,22 @@ class Game(ndb.Model):
     def new_game(cls, player_key):
         game = Game(
             player=player_key,
-            board=[[0 for x in range(9)] for x in range(9)],
+            board=[
+                [0 for x in range(BOARD_WIDTH)] for x in range(BOARD_HEIGHT)
+            ],
             # board=[[0 for x in range(9)] for x in range(9)],
             state=1,
             created=datetime.now(),
             modified=datetime.now()
         )
-        for y in range(9):
-            for x in range(9):
-                if ((y in (0, 8) and x in (3, 4, 5)) or
-                        (x in (0, 8) and y in (3, 4, 5)) or
-                        (x == 4 and y in (1, 7)) or
-                        (y == 4 and x in (1, 7))):
-                        game.board[y][x] = 1
-                elif ((x == 4 and y in (2, 3, 5, 6)) or
-                        (y == 4 and x in (2, 3, 5, 6))):
-                        game.board[y][x] = 2
-                elif x == 4 and y == 4:
-                    game.board[4][4] = 3
+        for y in range(BOARD_HEIGHT):
+            for x in range(BOARD_WIDTH):
+                if (y, x) in ATTACKERS:
+                    game.board[y][x] = 1
+                elif (y, x) in DEFENDERS:
+                    game.board[y][x] = 2
+                elif (y, x) == KING:
+                    game.board[y][x] = 3
         game.put()
         return game
 

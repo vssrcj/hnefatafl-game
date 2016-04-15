@@ -8,19 +8,22 @@ rect {
   fill: #D6882F;
 }
 .attacker {
-  fill: #00f;
+  fill: #333;
+}
+.attacker:hover {
+   cursor: pointer;
 }
 .defender {
-   fill: #0f0;
+   fill: #fff;
 }
 .king {
-   fill: #000;
+   fill: #00f;
 }
 .columns {
-  padding: 0;
+/*  padding: 0;*/
 }
 .attacker-select {
-   fill: #88f;
+   fill: #666;
 }
 
 .red {

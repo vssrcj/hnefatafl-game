@@ -31,10 +31,10 @@ class ReturnMessage(messages.Message):
                     1: player won
                     2: AI won
     """
-    game_over = messages.IntegerField(1, required=True)
-    sacrifice = messages.BooleanField(2, required=True)
-    cell_1 = messages.IntegerField(3, required=True)
-    cell_2 = messages.IntegerField(4, required=True)
+    cell_from = messages.StringField(1, required=True)
+    cell_to = messages.StringField(2, required=True)
+    removes = messages.StringField(3, required=True)
+    state = messages.StringField(4, required=True)
 
 
 PLAYER_REQUEST = endpoints.ResourceContainer(

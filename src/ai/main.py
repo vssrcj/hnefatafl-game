@@ -1,29 +1,27 @@
 # from transport_models import ReturnMessage
 
 import random
-import copy
-from game_checks import get_board_value, attacker_piece_score
+
+from game_checks import attacker_cell_score
 
 
 def get_result(board):
     move = get_best_move(board, True)
 
     if move:
-        print move
         score = move[0]
         from_cell = move[1]
         to_cell = move[2]
         captures = move[3]
-        result = score == -1
         if captures:
             for cell in captures:
-                board[cell[0]][cell[1]] = 0
-        from_value = board[from_cell[0]][from_cell[1]]
-        board[from_cell[0]][from_cell[1]] = 0
-        board[to_cell[0]][to_cell[1]] = from_value
-        return result
+                board[cell] = 0
+        from_value = board[from_cell]
+        board[from_cell] = 0
+        board[to_cell] = from_value
+        return (move[1], move[2], move[3], 0)
     else:
-        return True
+        return (None, None, None, 3)
 
 
 def get_best_move(board, defender):
@@ -40,7 +38,7 @@ def get_best_move(board, defender):
 
     scores = []
     if king:
-        move = best_move_per_piece(board, king[0], king[1], True, True)
+        move = best_move_per_piece(board, king, True, True)
 
         if move and move[0] == 10:
             return (-1, king, move[1], None)
@@ -48,11 +46,11 @@ def get_best_move(board, defender):
             scores.append((move[0], king, move[1], None))
 
     for piece in pieces:
-        move = best_move_per_piece(board, piece[0], piece[1], defender, False)
+        move = best_move_per_piece(board, piece, defender, False)
 
         if move:
             scores.append((move[0], piece, move[1], move[2]))
-    print pieces
+
     if scores:
         random.shuffle(scores)
         scores.sort(key=lambda x: x[0], reverse=True)
@@ -62,39 +60,39 @@ def get_best_move(board, defender):
         return None
 
 
-def best_move_per_piece(board, row, column, defender, king):
+def best_move_per_piece(board, from_cell, defender, king):
     """ score, to cell, captures """
     directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
     scores = []
     for direction in directions:
-        y = row + direction[0]
-        x = column + direction[1]
-        value = get_board_value(board, y, x)
+        to_y = from_cell[0] + direction[0]
+        to_x = from_cell[1] + direction[1]
+        value = board[to_y, to_x]
         while value == 0:
             if king:
-                if king_at_edge(board, y, x):
-                    return (10, (y, x), None)
+                if king_at_edge(board, to_y, to_x):
+                    return (10, (to_y, to_x), None)
                 else:
-                    scores.append((0, (y, x), None))
+                    scores.append((0, (to_y, to_x), None))
             else:
                 if defender:
-                    score, captures = defender_piece_score(board, y, x)
-                    new_board = copy.deepcopy(board)
+                    score, captures = defender_cell_score(board, to_y, to_x)
+                    new_board = board.copy()
                     for yt, rowt in enumerate(captures):
                         for xt in rowt:
-                            new_board[yt][xt] = 0
-                    new_board[y][x] = 0
-                    new_board[y][x] = 2
-                    #move = get_best_move(new_board, False)
-                    #if move:
-                    #    score -= move[0]
-                    scores.append((score, (y, x), captures))
+                            new_board[yt, xt] = 0
+                    new_board[from_cell] = 0
+                    new_board[to_y, to_x] = 2
+                    move = get_best_move(new_board, False)
+                    if move:
+                        score -= move[0]
+                    scores.append((score, (to_y, to_x), captures))
                 else:
-                    score, captures = attacker_piece_score(board, y, x)
-                    scores.append((score, (y, x), None))
-            y += direction[0]
-            x += direction[1]
-            value = get_board_value(board, y, x)
+                    score, captures = attacker_cell_score(board, to_y, to_x)
+                    scores.append((score, (to_y, to_x), None))
+            to_y += direction[0]
+            to_x += direction[1]
+            value = board[to_y, to_x]
 
     if scores:
         random.shuffle(scores)
@@ -106,13 +104,13 @@ def best_move_per_piece(board, row, column, defender, king):
 
 def king_at_edge(board, row, column):
     if (row == 0 or column == 0 or
-            len(board) == row-1 or len(board[row]) == column-1):
+            board.max == row-1 or board.row_length(row) == column-1):
         return True
     else:
         return False
 
 
-def defender_piece_score(board, row, column):
+def defender_cell_score(board, row, column):
     """ Get the score
 
     Returns:
@@ -122,20 +120,16 @@ def defender_piece_score(board, row, column):
     captures = []
     score = 0
 
-    if (get_board_value(board, row-1, column) == 1 and
-            get_board_value(board, row-2, column) == 2):
+    if board[row-1, column] == 1 and board[row-2, column] == 2:
         score += 2
         captures.append((row-1, column))
-    if (get_board_value(board, row, column+1) == 1 and
-            get_board_value(board, row, column+2) == 2):
+    if board[row, column+1] == 1 and board[row, column+2] == 2:
         score += 2
         captures.append((row, column+1))
-    if (get_board_value(board, row+1, column) == 1 and
-            get_board_value(board, row+2, column) == 2):
+    if board[row+1, column] == 1 and board[row+2, column] == 2:
         score += 2
         captures.append((row+1, column))
-    if (get_board_value(board, row, column-1) == 1 and
-            get_board_value(board, row, column-2) == 2):
+    if board[row, column-1] == 1 and board[row, column-2] == 2:
         score += 2
         captures.append((row, column-1))
 
