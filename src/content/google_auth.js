@@ -75,20 +75,7 @@ var auth = function() {
 /*
 * Loads the ui after authenticated
 */
-var userAuthed = function(mode) {
-   var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
-      if (!resp.code) {
 
-         sidenav.setLoggedIn(resp.picture, resp.name);
-
-
-         SIGNEDIN = true;
-      //	document.querySelector('#signin').textContent = 'Sign out';
-         //document.querySelector('#authedGreeting').disabled = false;
-      //   api_new_game();
-       }
-  });
-}
 
 var api_new_game = function() {
    gapi.client.hnefatafl.new_game().execute(function(response){
