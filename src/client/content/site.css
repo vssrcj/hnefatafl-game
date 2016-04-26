@@ -1,0 +1,69 @@
+.mdl-layout__drawer-button > i.material-icons {
+   margin-top: 10px;
+}
+/*body {
+   margin: 0;
+   line-height: 0;
+}*/
+
+.row {
+   width: 100%;
+   font-size: 0;
+   white-space: nowrap;
+}
+
+
+.row > div {
+   width: calc(4vw - 4px);
+   height: calc(4vw - 4px);
+   display: inline-block;
+   padding: 2px;
+}
+#board {
+   width: 36vw;
+   margin: 20px auto;
+}
+@media screen and (max-width:1024px) {
+   .row > div {
+      width: calc(8vw - 4px);
+      height: calc(8vw - 4px);
+   }
+   #board {
+      width: 72vw;
+   }
+}
+@media screen and (max-width:480px) {
+   .row > div {
+      width: calc(11.111111111111vw - 4px);
+      height: calc(11.111111111111vw - 4px);
+   }
+   #board {
+      width: 100vw;
+   }
+}
+
+.hidden {
+   display: none;
+}
+
+.row > div > div {
+   height: 100%;
+   width: 100%;
+   border-radius: 2px;
+}
+
+.attacker {
+   background-color: rgba(75, 68, 167, 0.7);
+}
+
+.defender {
+   background-color: rgba(121,85,72,0.8);
+}
+
+.king {
+   background-color: rgba(16, 15, 14, 0.8);
+}
+
+.empty {
+   background-color: rgba(121,85,72,0.2);
+}

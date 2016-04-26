@@ -1,7 +1,8 @@
 var google_apis = (function() {
-   function api_new_game() {
-      gapi.client.hnefatafl.new_game({"email":"v"}).execute(function(response){
-         board.new_game(response.key, JSON.parse(response.board));
+   function new_game() {
+      gapi.client.hnefatafl.new_game(/*{"email":"v"}*/).execute(function(response){
+         console.log(response.board);
+         board.new_board(response.key, JSON.parse(response.board));
       });
    }
    function parse_board(board) {
@@ -17,6 +18,7 @@ var google_apis = (function() {
          }
          s.push(push_row);
       }
+   }
 
       function ai_move(first) {
          alert('ai_move');
@@ -26,7 +28,7 @@ var google_apis = (function() {
             else change_board();
          });
       }
-
+      return {new_game};
 })();
 
 
@@ -67,5 +69,4 @@ var google_apis = (function() {
 				}
 				s.push(push_row);
 			}
-
-			BOARD = s;
+      }

@@ -1,9 +1,10 @@
-var auth = (function(){
+var google_auth = (function(){
 
    const url = 'http://localhost:8080/_ah/api';
    var signedin = false;
 
    function loadModules(){
+      console.log('gogo');
       gapi.client.load(
          'oauth2',
          'v2'
@@ -17,8 +18,11 @@ var auth = (function(){
    }
 
    function afterLoaded() {
-      sidenav.enableLogin();
+      console.log('here');
+      profile.enableLogin();
+      console.log('here2');
       signin(immediate = true);
+      console.log('here3');
    }
 
    function signin(immediate) {
@@ -36,14 +40,16 @@ var auth = (function(){
    function userAuthed(mode) {
       var request = gapi.client.oauth2.userinfo.get().execute(function(resp) {
          if (!resp.code) {
-            sidenav.setLoggedIn(resp.picture, resp.name);
-            signedin = false;
+            profile.setLoggedIn(resp.picture, resp.name);
+            signedin = true;
+            google_apis.new_game();
           }
      });
    }
    return {
       loadModules: loadModules,
-      isAuthed: isAuthed
+      isAuthed: isAuthed,
+      signin: signin
    };
 
 })();
