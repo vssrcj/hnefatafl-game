@@ -52,16 +52,25 @@
    border-radius: 2px;
 }
 
+
 .attacker {
    background-color: rgba(75, 68, 167, 0.7);
 }
-
+.attacker-select {
+   background-color: rgba(60, 58, 140, 0.7);
+   box-shadow:
+      0 6px 10px 0 rgba(0,0,0,.14),
+      0 1px 18px 0 rgba(0,0,0,.12),
+      0 3px 5px -1px rgba(0,0,0,.2);
+}
 .defender {
    background-color: rgba(121,85,72,0.8);
+   cursor: pointer;
 }
 
 .king {
    background-color: rgba(16, 15, 14, 0.8);
+   cursor: pointer;
 }
 
 .empty {

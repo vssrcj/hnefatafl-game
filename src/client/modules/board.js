@@ -4,7 +4,9 @@ var board = (function() {
    const HEIGHT = 9;
    const WIDTH = 9;
 
-   var key, board;
+   var board;
+
+   var $selected = null;
 
    const typeNames = [
       'empty',
@@ -15,11 +17,34 @@ var board = (function() {
 
    function onClick() {
       var $cell = $(this);
-      var val = parseInt($cell.attr('data-val'));
-      var id = $cell.attr('id').split(',');
-      var row = id[0];
-      var column = id[1];
+      var type = $cell.attr('class');
+      console.log(type);
+      //var id = $cell.attr('id');//.split(',');
+      //var row = id[0];
+      //var column = id[1];
+   //   console.log(id);
 
+      if(type == "attacker") {
+         $cell.attr('class','attacker-select');
+         if($selected) {
+            $selected.attr('class','attacker');
+         }
+         $selected = $cell;
+      }
+      else if($selected){
+         if(type == "empty") {
+            google_apis.player_move(
+               $selected.attr('id'),
+               $cell.attr('id')
+            )
+         }
+         else {
+            $selected.attr('class','attacker');
+            $selected = null;
+         }
+      }
+   }
+   function restore() {
    }
 
    function cellClick(target, params) {
@@ -33,7 +58,7 @@ var board = (function() {
    	for(var row=0; row< HEIGHT; row++){
          var row_builder = "<div class='row'>";
    		for(var col=0; col< WIDTH; col++) {
-            row_builder += "<div><div data-val='0' class='empty' id='c" + row + "," + col + "'></div></div>";
+            row_builder += "<div><div data-val='0' class='empty' id='" + row + "," + col + "'></div></div>";
    		}
          row_builder += "</div>";
 
@@ -46,21 +71,35 @@ var board = (function() {
 
    }
 
-   function new_board(key, board) {
-      key = key;
+   function fadeInNewClass(source, from_class, to_class) {
+      source.switchClass(from_class, to_class, 1000);
+   }
+
+   function new_board(board) {
       board = board;
    	for(var row=0; row< board.length; row++){
-
-   		for(var col=0; col< board[row].length; col++) {
+         var columnWidth = board[row].length;
+   		for(var col=0; col< columnWidth; col++) {
             var val = board[row][col];
 
             if(val != 0) {
-               var t = document.getElementById("c" + row + "," + col);
+               var t = document.getElementById(row + "," + col);
 
-               console.log(t);
                var $cell = $(t);
+
+               $cell.attr('class',typeNames[val]);
+
                //$cell.removeClass("empty").addClass(typeNames[val]);
-               $cell.switchClass("empty", typeNames[val], 1000);
+      //          var time = (row*columnWidth + col)*20;
+      //          (function(source, to_class){
+      //             setTimeout(function() {
+      // //               console.log(to_class);
+      //                source.switchClass("empty", to_class, 1000);
+      //                source.attr('data-val',val);
+      //             },time);
+      //          })($cell, typeNames[val]);
+
+
                //({"background-color":"red"},2000);
                //$cell.removeClass('empty');
             //   $cell.addClass(typeNames[val]);
