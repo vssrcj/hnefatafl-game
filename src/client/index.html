@@ -33,16 +33,20 @@
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">Hnefatafl</span>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="">How to play</a>
-      <a class="mdl-navigation__link" href="">History of Hnefatafl</a>
-      <a class="mdl-navigation__link" href="">About the project</a>
+      <a class="mdl-navigation__link" href="#">How to play</a>
+      <a class="mdl-navigation__link" href="#">History of Hnefatafl</a>
+      <a class="mdl-navigation__link" href="#">About the project</a>
     </nav>
   </div>
   <main class="mdl-layout__content">
    	<div class="mdl-layout__tab-panel is-active">
 		 <!--	<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
 			 <div class="mdl-card mdl-cell mdl-cell--12-col"> -->
-		 	 	<div id="board" class="mdl-shadow--6dp"></div>
+		 	 	<div id="board" class="mdl-shadow--6dp">
+					<div id="board_header" class="hidden">
+						<span id="new_game">CLICK TO CREATE NEW GAME</span>
+					</div>
+				</div>
 			<!-- </div>
 		</section>-->
 
@@ -60,7 +64,6 @@
 		<script src="modules/board.js"></script>
 		<script>
 			function init() {
-				console.log('as');
 				google_auth.loadModules();
 			}
 			board.empty_board();

@@ -17,6 +17,7 @@ var profile = (function() {
    }
    function setLoggedIn(src, name) {
       console.log(name);
+   //   enableLogin();
    //   $picture.attr('src', src);
      $name.html(name);
         $name.removeClass("hidden");

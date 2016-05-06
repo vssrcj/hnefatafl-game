@@ -2,11 +2,14 @@
 
 from google.appengine.ext import ndb
 
-from transport_models import GameForm, StringMessage
+from transport_models import GameForm, StringMessage, PlayResult
 
 from datetime import datetime
 import copy
 
+from game_checks import attacker_cell_score
+
+MAX_SCORE = 999
 
 BOARD_WIDTH = 9
 BOARD_HEIGHT = 9
@@ -26,17 +29,26 @@ class Player(ndb.Model):
     name = ndb.StringProperty(required=True)
 
     @classmethod
-    def new_player(cls, email):
-        player = Player(email=email)
+    def new_player(cls, name, email):
+        player = Player(name=name, email=email)
         player.put()
         return player
 
     def games(self):
-        games = Game.query(Game.player == self.key)
+        games = Game.query(Game.player == self.key).order(-Game.modified)
         return_value = []
         for game in games:
-            return_value.append((str(game.created), str(game.key.urlsafe())))
+            return_value.append(str(game.key.urlsafe()))
+
         return StringMessage(message=str(return_value))
+
+    def latest_game(self):
+        games = Game.query(Game.player == self.key).order(-Game.modified)
+        game = games.fetch(1)
+        if game:
+            return game[0].to_form()
+        else:
+            return None
 
 
 class Board():
@@ -72,6 +84,32 @@ class Board():
     def row_length(self, row):
         return len(self.values[row])
 
+    def valid_player_move(self, origin, destination):
+        if self[origin] != 1 or origin == destination:
+            return False
+        directions = ((-1, 0), (1, 0), (0, 1), (0, -1))
+        for direction in directions:
+            check = copy.deepcopy(origin)
+            while self[check] == 0:
+                if check == destination:
+                    return True
+                check[0] += direction[0]
+                check[1] += direction[1]
+
+        return False
+
+    def player_move(self, origin, destination):
+        """ player won, captures """
+        score, captures = attacker_cell_score(
+            board=self, cell=destination)
+        print score
+        print captures
+        for capture in captures:
+            self[capture] = 0
+        self[origin] = 0
+        self[destination] = 1
+        return (True if score == MAX_SCORE else None, captures)
+
 
 class Game(ndb.Model):
     """
@@ -91,7 +129,7 @@ class Game(ndb.Model):
                 3: AI won
     """
     player = ndb.KeyProperty(required=True, kind=Player)
-    board = ndb.PickleProperty(required=True)
+    board_values = ndb.PickleProperty(required=True)
     state = ndb.IntegerProperty(required=True)
     created = ndb.DateTimeProperty(required=True)
     modified = ndb.DateTimeProperty(required=True)
@@ -100,10 +138,9 @@ class Game(ndb.Model):
     def new_game(cls, player_key):
         game = Game(
             player=player_key,
-            board=[
+            board_values=[
                 [0 for x in range(BOARD_WIDTH)] for x in range(BOARD_HEIGHT)
             ],
-            # board=[[0 for x in range(9)] for x in range(9)],
             state=1,
             created=datetime.now(),
             modified=datetime.now()
@@ -111,11 +148,11 @@ class Game(ndb.Model):
         for y in range(BOARD_HEIGHT):
             for x in range(BOARD_WIDTH):
                 if (y, x) in ATTACKERS:
-                    game.board[y][x] = 1
+                    game.board_values[y][x] = 1
                 elif (y, x) in DEFENDERS:
-                    game.board[y][x] = 2
+                    game.board_values[y][x] = 2
                 elif (y, x) == KING:
-                    game.board[y][x] = 3
+                    game.board_values[y][x] = 3
         game.put()
         return game
 
@@ -123,63 +160,20 @@ class Game(ndb.Model):
         return GameForm(
             key=self.key.urlsafe(),
             player_email=self.player.get().email,
-            board=str(self.board),
+            board=str(self.board_values),
             state=self.state
         )
 
-    def set_board_value(self, cell, value):
-        self.board[cell/9][cell % 9] = value
+    @classmethod
+    def get_play_result(
+        cls, origin_value, origin, destination, captures, game_state
+    ):
+        return PlayResult(
+            origin_value=origin_value,
+            origin=str(origin[0]) + ',' + str(origin[1]),
+            destination=str(destination[0]) + ',' + str(destination[1]),
+            captures=str(captures),
+            game_state=game_state)
 
-    def get_board_value(self, row, column):
-        if row < 0 or row > 8 or column < 0 or column > 8:
-            return None
-        else:
-            return self.board[row][column]
-
-    def get_king(self):
-        for position, value in self.board:
-            if value == 3:
-                return (position/9, position % 9)
-
-    def get_board_copy(self):
-        return copy.deepcopy(self.board)
-
-    def can_move(self, piece, target):
-        if not self.get_board_value(target) or not self.get_board_value(piece):
-            return False
-        if piece[0] == target[0]:           # same row
-            if piece[1] < target[1]:        # test right
-                right = piece[1]/9*9+8
-                test = target[1] + 1
-                while test <= right:
-                    if self.board[test] != 0:
-                        return False
-                    test += 1
-                return True
-            elif piece[1] > target[1]:      # test left
-                left = piece[1]/9*9
-                test = target[1] - 1
-                while test >= left:
-                    if self.board[test] != 0:
-                        return False
-                    test -= 1
-                return True
-            else:                           # same square
-                return True
-        elif piece[1] == target[1]:         # same column
-            if piece[0] > target[0]:        # test top
-                top = piece[0] % 9
-                test = target[0] - 9
-                while test > top:
-                    if self.board[test] != 0:
-                        return False
-                    test -= 9
-                return True
-            elif piece[0] < target[0]:      # test bottom
-                bottom = piece[0] % 9 + 72
-                test = target[0] + 9
-                while test > bottom:
-                    if self.board[test] != 0:
-                        return False
-                    test += 9
-                return True
+    def get_board(self):
+        return Board(values=self.board)

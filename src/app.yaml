@@ -9,8 +9,11 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
+- url: /modules
+  static_dir: client/modules
+
 - url: /content
-  static_dir: content
+  static_dir: client/content
 
 - url: /_ah/spi/.*
   script: api.API

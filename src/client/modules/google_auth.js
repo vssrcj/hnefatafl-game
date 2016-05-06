@@ -4,7 +4,6 @@ var google_auth = (function(){
    var signedin = false;
 
    function loadModules(){
-      console.log('gogo');
       gapi.client.load(
          'oauth2',
          'v2'
@@ -18,11 +17,9 @@ var google_auth = (function(){
    }
 
    function afterLoaded() {
-      console.log('here');
-      profile.enableLogin();
-      console.log('here2');
       signin(immediate = true);
-      console.log('here3');
+      setTimeout(profile.enableLogin(), 2000);
+
    }
 
    function signin(immediate) {
@@ -42,7 +39,9 @@ var google_auth = (function(){
          if (!resp.code) {
             profile.setLoggedIn(resp.picture, resp.name);
             signedin = true;
-            google_apis.new_game();
+            //google_apis.new_game(google_apis.ai_move);
+            google_apis.last_player_game();
+         //   google_apis.ai_move();
           }
      });
    }

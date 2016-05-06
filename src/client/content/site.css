@@ -1,10 +1,6 @@
 .mdl-layout__drawer-button > i.material-icons {
    margin-top: 10px;
 }
-/*body {
-   margin: 0;
-   line-height: 0;
-}*/
 
 .row {
    width: 100%;
@@ -52,12 +48,21 @@
    border-radius: 2px;
 }
 
+.attacker-header {
+   background-color: rgb(75, 68, 167);
+}
+
+.defender-header {
+   background-color: rgb(121,85,72);
+}
 
 .attacker {
    background-color: rgba(75, 68, 167, 0.7);
+   cursor: pointer;
 }
 .attacker-select {
    background-color: rgba(60, 58, 140, 0.7);
+   cursor: pointer;
    box-shadow:
       0 6px 10px 0 rgba(0,0,0,.14),
       0 1px 18px 0 rgba(0,0,0,.12),
@@ -65,7 +70,7 @@
 }
 .defender {
    background-color: rgba(121,85,72,0.8);
-   cursor: pointer;
+
 }
 
 .king {
@@ -75,4 +80,18 @@
 
 .empty {
    background-color: rgba(121,85,72,0.2);
+}
+
+#new_game {
+   font-size: x-small;
+   float: right;
+   cursor: pointer;
+}
+
+#board_header {
+   font-size: 20px;
+   border-radius: 2px;
+   padding: 10px;
+   color: white;
+   font-weight: bold;
 }

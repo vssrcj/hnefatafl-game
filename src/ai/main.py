@@ -1,56 +1,66 @@
 # from transport_models import ReturnMessage
 
 import random
+import copy
 
 from game_checks import attacker_cell_score
 
+MAX_SCORE = 999
 
-def get_result(board):
-    move = get_best_move(board, True)
+
+def ai_move(board):
+    """ ai won, origin, destination, captures """
+    move = get_best_move(board, is_defender=True)
 
     if move:
-        score = move[0]
-        from_cell = move[1]
-        to_cell = move[2]
-        captures = move[3]
+        score, origin, destination, captures = move
+
         if captures:
             for cell in captures:
                 board[cell] = 0
-        from_value = board[from_cell]
-        board[from_cell] = 0
-        board[to_cell] = from_value
-        return (move[1], move[2], move[3], 0)
+
+        origin_value = board[origin]
+        board[origin] = 0
+        board[destination] = origin_value
+        return (True if score == MAX_SCORE else False,
+                origin, destination, captures)
     else:
-        return (None, None, None, 3)
+        return (True, None, None, None)
 
 
-def get_best_move(board, defender):
-    """ score, from cell, to cell, captures """
-    check = 2 if defender else 1
+def get_best_move(board, is_defender):
+    """ score, origin, destination, captures """
+    check = 2 if is_defender else 1
     pieces = []
     king = None
     for y, row in enumerate(board):
         for x, value in enumerate(row):
             if value == check:
                 pieces.append((y, x))
-            elif defender and value == 3:
+            elif is_defender and value == 3:
                 king = (y, x)
 
     scores = []
     if king:
-        move = best_move_per_piece(board, king, True, True)
-
-        if move and move[0] == 10:
-            return (-1, king, move[1], None)
-        elif move:
-            scores.append((move[0], king, move[1], None))
-
-    for piece in pieces:
-        move = best_move_per_piece(board, piece, defender, False)
+        move = best_move_per_piece(
+            board, origin=king, is_defender=True, is_king=True)
 
         if move:
-            scores.append((move[0], piece, move[1], move[2]))
+            score, destination, captures = move
 
+            if score == MAX_SCORE:
+                return score, king, destination, captures
+            else:
+                scores.append((score, king, destination, captures))
+
+    for piece in pieces:
+        move = best_move_per_piece(
+            board, origin=piece, is_defender=is_defender, is_king=False)
+
+        if move:
+            score, destination, captures = move
+
+            scores.append((score, piece, destination, captures))
     if scores:
         random.shuffle(scores)
         scores.sort(key=lambda x: x[0], reverse=True)
@@ -60,39 +70,39 @@ def get_best_move(board, defender):
         return None
 
 
-def best_move_per_piece(board, from_cell, defender, king):
-    """ score, to cell, captures """
+def best_move_per_piece(board, origin, is_defender, is_king):
+    """ score, destination, captures """
     directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
     scores = []
+
     for direction in directions:
-        to_y = from_cell[0] + direction[0]
-        to_x = from_cell[1] + direction[1]
-        value = board[to_y, to_x]
-        while value == 0:
-            if king:
-                if king_at_edge(board, to_y, to_x):
-                    return (10, (to_y, to_x), None)
+        check = copy.deepcopy(origin)
+        while True:
+            check = (check[0] + direction[0], check[1] + direction[1])
+
+            if board[check] != 0:
+                break
+
+            if is_king:
+                if king_at_edge(board, cell=check):
+                    return (MAX_SCORE, check, [])
                 else:
-                    scores.append((0, (to_y, to_x), None))
+                    scores.append((0, check, []))
             else:
-                if defender:
-                    score, captures = defender_cell_score(board, to_y, to_x)
+                if is_defender:
+                    score, captures = defender_cell_score(board, cell=check)
                     new_board = board.copy()
-                    for yt, rowt in enumerate(captures):
-                        for xt in rowt:
-                            new_board[yt, xt] = 0
-                    new_board[from_cell] = 0
-                    new_board[to_y, to_x] = 2
-                    move = get_best_move(new_board, False)
+                    for capture in captures:
+                        new_board[capture] = 0
+                    new_board[origin] = 0
+                    new_board[check] = 2
+                    move = get_best_move(board=new_board, is_defender=False)
                     if move:
                         score -= move[0]
-                    scores.append((score, (to_y, to_x), captures))
+                    scores.append((score, check, captures))
                 else:
-                    score, captures = attacker_cell_score(board, to_y, to_x)
-                    scores.append((score, (to_y, to_x), None))
-            to_y += direction[0]
-            to_x += direction[1]
-            value = board[to_y, to_x]
+                    score, captures = attacker_cell_score(board, cell=check)
+                    scores.append((score, check, []))
 
     if scores:
         random.shuffle(scores)
@@ -102,15 +112,18 @@ def best_move_per_piece(board, from_cell, defender, king):
         return None
 
 
-def king_at_edge(board, row, column):
-    if (row == 0 or column == 0 or
-            board.max == row-1 or board.row_length(row) == column-1):
-        return True
+def king_at_edge(board, cell):
+    row, column = cell
+    if (board[row+1, column] is None or
+        board[row-1, column] is None or
+        board[row, column+1] is None or
+       board[row, column-1] is None):
+            return True
     else:
         return False
 
 
-def defender_cell_score(board, row, column):
+def defender_cell_score(board, cell):
     """ Get the score
 
     Returns:
@@ -119,6 +132,7 @@ def defender_cell_score(board, row, column):
      """
     captures = []
     score = 0
+    row, column = cell
 
     if board[row-1, column] == 1 and board[row-2, column] == 2:
         score += 2

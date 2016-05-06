@@ -11,7 +11,8 @@ class MainPage(webapp2.RequestHandler):
 
 
 JINJA2 = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/client"),
+    # loader=jinja2.FileSystemLoader('client'),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 

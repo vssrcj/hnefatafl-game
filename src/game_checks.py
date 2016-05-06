@@ -1,4 +1,5 @@
 """"""
+MAX_SCORE = 999
 
 
 def check_move(cell_from, cell_to, board):
@@ -50,8 +51,24 @@ def valid_move(cell_from, cell_to, board):
     return False
 
 
-def attacker_cell_score(board, y, x):
-    """ Returns score, and captures """
+def is_surrounded(u, r, d, l):
+    friend_side = False
+    sides_surrounded = 0
+
+    for x in (u, r, d, l):
+        if x == 1:
+            sides_surrounded += 1
+        elif x == 2 and not friend_side:
+            sides_surrounded += 1
+            friend_side = True
+
+    return sides_surrounded == 4
+
+
+def attacker_cell_score(board, cell):
+    """ Returns score, captures """
+    y, x = cell
+    capture_king = False
     score = 0
     captures = []
 
@@ -75,32 +92,33 @@ def attacker_cell_score(board, y, x):
     if u == 2 and u2 == 1:
         score += 3
         captures.append((y-1, x))
-    if u == 3 and (ul is not None or ul == 1) and \
-       (u2 is not None or u2 == 1) and (ur is not None or ur == 1):
-        score += 10
-        captures.append((y-1, x))
+    if u == 3:
+        if is_surrounded(u2, ur, 1, ul):
+            capture_king = True
+            captures.append((y-1, x))
 
     if r == 2 and r2 == 1:
         score += 3
         captures.append((y, x+1))
-    if r == 3 and (ur is not None or ur == 1) and \
-       (r2 is not None or r2 == 1) and (dr is not None or dr == 1):
-        score += 10
-        captures.append((y, x+1))
+    if r == 3:
+        if is_surrounded(ur, r2, dr, 1):
+            capture_king = True
+            captures.append((y, x+1))
 
     if d == 2 and d2 == 1:
         score += 3
         captures.append((y+1, x))
-    if d == 3 and (dr is not None or dr == 1) and \
-       (d2 is not None or d2 == 1) and (dl is not None or dl == 1):
-        score += 10
-        captures.append((y+1, x))
+    if d == 3:
+        if is_surrounded(1, dr, d2, dl):
+            capture_king = True
+            captures.append((y+1, x))
 
     if l == 2 and l2 == 1:
         score += 3
         captures.append((y, x-1))
-    if l == 3 and (dl is not None or dl == 1) and \
-       (l2 is not None or l2 == 1) and (ul is not None or ul == 2):
-        score += 10
-        captures.append((y, x-1))
-    return score, captures
+    if l == 3:
+        if is_surrounded(ul, 1, dl, l2):
+            capture_king = True
+            captures.append((y, x-1))
+
+    return MAX_SCORE if capture_king else score, captures

@@ -1,6 +1,9 @@
 var board = (function() {
 
    let $board = $("#board");
+   let $board_header = $("#board_header");
+   let $new_game = $("#new_game");
+
    const HEIGHT = 9;
    const WIDTH = 9;
 
@@ -18,18 +21,16 @@ var board = (function() {
    function onClick() {
       var $cell = $(this);
       var type = $cell.attr('class');
-      console.log(type);
-      //var id = $cell.attr('id');//.split(',');
-      //var row = id[0];
-      //var column = id[1];
-   //   console.log(id);
 
       if(type == "attacker") {
-         $cell.attr('class','attacker-select');
          if($selected) {
             $selected.attr('class','attacker');
+            $selected = null;
          }
-         $selected = $cell;
+         else {
+            $cell.attr('class','attacker-select');
+            $selected = $cell;
+         }
       }
       else if($selected){
          if(type == "empty") {
@@ -37,6 +38,7 @@ var board = (function() {
                $selected.attr('id'),
                $cell.attr('id')
             )
+            $selected = null;
          }
          else {
             $selected.attr('class','attacker');
@@ -44,11 +46,31 @@ var board = (function() {
          }
       }
    }
-   function restore() {
+   function new_game() {
+         $board.on('click','.row > div > div', onClick);
+      google_apis.new_game();
+      $board_header.hide();
    }
-
+   $new_game.on('click',new_game);
    function cellClick(target, params) {
 
+   }
+
+   function game_end(game_state) {
+      if(game_state == 2 || game_state == 3) {
+         if(game_state == 2){
+            $board_header.append("Player won!")
+            $board_header.addClass("attacker-header");
+         }
+         else {
+             $board_header.addClass("defender-header");
+             $board_header.append("AI won!");
+          }
+         $board.off();
+         $board_header.removeClass('hidden');
+         return true;
+      }
+      return false;
    }
 
    function empty_board() {
@@ -75,59 +97,43 @@ var board = (function() {
       source.switchClass(from_class, to_class, 1000);
    }
 
+   function move(origin_value, origin, destination, captures) {
+      var or = document.getElementById(origin);
+      var $or = $(or);
+      $or.attr('class',typeNames[0]);
+
+      var de = document.getElementById(destination);
+      var $de = $(de);
+      $de.attr('class',typeNames[origin_value]);
+
+      if(captures && captures[0]) {
+
+         for(var i=0; i< captures.length; i++) {
+            f = captures[i][0];
+            t = captures[i][1];
+            console.log(f);
+            var ca = document.getElementById(f + "," + t);
+            var $ca = $(ca);
+            $ca.attr('class',typeNames[0]);
+         }
+      }
+   }
+
    function new_board(board) {
       board = board;
-   	for(var row=0; row< board.length; row++){
+   	for(var row=0; row < board.length; row++){
          var columnWidth = board[row].length;
-   		for(var col=0; col< columnWidth; col++) {
+   		for(var col=0; col < columnWidth; col++) {
             var val = board[row][col];
 
-            if(val != 0) {
                var t = document.getElementById(row + "," + col);
 
                var $cell = $(t);
 
                $cell.attr('class',typeNames[val]);
 
-               //$cell.removeClass("empty").addClass(typeNames[val]);
-      //          var time = (row*columnWidth + col)*20;
-      //          (function(source, to_class){
-      //             setTimeout(function() {
-      // //               console.log(to_class);
-      //                source.switchClass("empty", to_class, 1000);
-      //                source.attr('data-val',val);
-      //             },time);
-      //          })($cell, typeNames[val]);
-
-
-               //({"background-color":"red"},2000);
-               //$cell.removeClass('empty');
-            //   $cell.addClass(typeNames[val]);
-            }
-
-
-            //row_builder += "<div><div data-val='0' id='" + row + "," + col + "'></div></div>";
-
-/*
-   			var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-   			rect.setAttribute('x', col * 70);
-   			rect.setAttribute('y', row * 70);
-   			rect.setAttribute('id', row + ',' + col);
-            var
-   			var val = board[row][col];
-   			rect.setAttribute('class',typeNames[val]);
-   			document.getElementById("svg").appendChild(rect);
-            rect.addEventListener('click', cellClick);*/
    		}
-      //   row_builder += "</div>";
-
-      //   table_builder += row_builder;
    	}
-
-      //$board.append(table_builder);
-
-      //$board.on('click','.row > div > div', onClick);
-
 
    }
 
@@ -146,7 +152,7 @@ var board = (function() {
 
    }
 
-         return {empty_board , new_board };
+         return {empty_board , new_board , move, game_end};
 })();
 
 //
