@@ -1,6 +1,6 @@
 var google_auth = (function(){
 
-   const url = 'http://localhost:8080/_ah/api';
+   const url = "http://localhost:8080/_ah/api";
    var signedin = false;
 
    function loadModules(){

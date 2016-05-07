@@ -1,7 +1,7 @@
 import endpoints
 from protorpc import remote
 from models import Game, Player, Board
-from transport_models import StringMessage, GameForm, PlayResult
+from transport_models import PlayerScore, PlayerScores, GameForm, PlayResult, PlayerGames
 from transport_models import PLAY_REQUEST, GAME_REQUEST
 
 from datetime import datetime
@@ -27,7 +27,7 @@ class HnefataflAPI(remote.Service):
     """Game API"""
 
     @endpoints.method(
-        response_message=StringMessage,
+        response_message=PlayerGames,
         path='player_games',
         name='player_games',
         http_method='GET')
@@ -42,7 +42,9 @@ class HnefataflAPI(remote.Service):
         if not player:
             raise endpoints.NotFoundException('Player not found')
 
-        return player.games()
+        return PlayerGames(
+            games=[game.to_short_form() for game in player.games()]
+        )
 
     @endpoints.method(
         response_message=GameForm,
@@ -66,6 +68,23 @@ class HnefataflAPI(remote.Service):
             return latest_game
         else:
             raise endpoints.NotFoundException('No games are found')
+
+    @endpoints.method(
+        response_message=PlayerScores,
+        path='player_rankings',
+        name='player_rankings',
+        http_method='GET')
+    def player_rankings(self, request):
+        """Gets last playe games"""
+        return PlayerScores(
+            players=[
+                PlayerScore(
+                    email=player[2],
+                    win_percentage=player[0],
+                    games_played=player[1]
+                ) for player in Player.rankings()
+            ]
+        )
 
     @endpoints.method(
         response_message=GameForm,

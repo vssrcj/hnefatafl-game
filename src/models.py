@@ -2,7 +2,7 @@
 
 from google.appengine.ext import ndb
 
-from transport_models import GameForm, StringMessage, PlayResult
+from transport_models import GameForm, PlayerScore, GameShortForm, PlayResult
 
 from datetime import datetime
 import copy
@@ -35,12 +35,11 @@ class Player(ndb.Model):
         return player
 
     def games(self):
-        games = Game.query(Game.player == self.key).order(-Game.modified)
-        return_value = []
-        for game in games:
-            return_value.append(str(game.key.urlsafe()))
+        games = []
+        for game in Game.query(Game.player == self.key).order(-Game.modified):
+            games.append(game)
 
-        return StringMessage(message=str(return_value))
+        return games
 
     def latest_game(self):
         games = Game.query(Game.player == self.key).order(-Game.modified)
@@ -49,6 +48,24 @@ class Player(ndb.Model):
             return game[0].to_form()
         else:
             return None
+
+    @classmethod
+    def rankings(cls):
+        players = Player.query()
+        scores = []
+        for player in players:
+            wins = losses = games = 0
+            for game in player.games():
+                games += 1
+                state = game.state
+                if state == 2:
+                    wins += 1
+                    losses += 1
+            win_percentage = float(wins)/(wins + losses) if (wins or losses) else 0
+
+            scores.append((win_percentage, games, player.email))
+        scores.sort(key=lambda x: (-x[0], x[1]))
+        return scores
 
 
 class Board():
@@ -133,6 +150,7 @@ class Game(ndb.Model):
     state = ndb.IntegerProperty(required=True)
     created = ndb.DateTimeProperty(required=True)
     modified = ndb.DateTimeProperty(required=True)
+    turn = ndb.IntegerProperty(required=True)
 
     @classmethod
     def new_game(cls, player_key):
@@ -161,6 +179,13 @@ class Game(ndb.Model):
             key=self.key.urlsafe(),
             player_email=self.player.get().email,
             board=str(self.board_values),
+            state=self.state
+        )
+
+    def to_short_form(self):
+        return GameShortForm(
+            key=self.key.urlsafe(),
+            player_email=self.player.get().email,
             state=self.state
         )
 

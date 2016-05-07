@@ -95,3 +95,7 @@
    color: white;
    font-weight: bold;
 }
+
+.mdl-dialog {
+   width: 400px;
+}

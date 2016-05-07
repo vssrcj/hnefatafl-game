@@ -9,59 +9,90 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 		<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.brown-yellow.min.css" />
 		<script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
 		<link rel="stylesheet" href="content/site.css" />
+	</head>
 	<body>
 
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-  <header class="mdl-layout__header">
-    <div class="mdl-layout__header-row">
-      <span class="mdl-layout-title">Hnefatafl</span>
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+			<header class="mdl-layout__header">
+				<div class="mdl-layout__header-row">
+					<span class="mdl-layout-title">Hnefatafl</span>
 
-      <div class="mdl-layout-spacer"></div>
-		<!-- <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
-           <label class="mdl-button mdl-js-button mdl-button--icon" for="search">
-             <i class="material-icons">search</i>
-           </label>
-		  </div> -->
-      <nav class="mdl-navigation">
-        <a class="mdl-navigation__link hidden" id="login" href="#">Login</a>
-		  <a class="mdl-navigation__link hidden" id="name" href="#"></a>
-		  <!-- <img id="picture" /> -->
-      </nav>
-    </div>
-  </header>
-  <div class="mdl-layout__drawer">
-    <span class="mdl-layout-title">Hnefatafl</span>
-    <nav class="mdl-navigation">
-      <a class="mdl-navigation__link" href="#">How to play</a>
-      <a class="mdl-navigation__link" href="#">History of Hnefatafl</a>
-      <a class="mdl-navigation__link" href="#">About the project</a>
-    </nav>
-  </div>
-  <main class="mdl-layout__content">
-   	<div class="mdl-layout__tab-panel is-active">
-		 <!--	<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-			 <div class="mdl-card mdl-cell mdl-cell--12-col"> -->
-		 	 	<div id="board" class="mdl-shadow--6dp">
-					<div id="board_header" class="hidden">
-						<span id="new_game">CLICK TO CREATE NEW GAME</span>
-					</div>
+					<div class="mdl-layout-spacer"></div>
+
+					<nav class="mdl-navigation">
+						<a class="mdl-navigation__link hidden" id="login" href="#">Login</a>
+						<a class="mdl-navigation__link hidden" id="name" href="#"></a>
+					</nav>
 				</div>
-			<!-- </div>
-		</section>-->
+			</header>
 
-	 </div>
-  </main>
-</div>
+			<div class="mdl-layout__drawer">
+				<span class="mdl-layout-title">Hnefatafl</span>
+				<nav class="mdl-navigation">
+					<a class="mdl-navigation__link" id="how" href="#">How to play</a>
+					<a class="mdl-navigation__link" id="history" href="#">History of Hnefatafl</a>
+					<a class="mdl-navigation__link" id="about" href="#">About the project</a>
+				</nav>
+			</div>
+
+			<main class="mdl-layout__content">
+				<div class="mdl-layout__tab-panel is-active">
+
+					<div id="board" class="mdl-shadow--6dp">
+						<div id="board_header" class="hidden">
+							<span id="new_game">CLICK TO CREATE NEW GAME</span>
+						</div>
+					</div>
+
+				</div>
+			</main>
+		</div>
+
+		<dialog class="mdl-dialog" id="how-dialog">
+			<div class="mdl-dialog__content">
+				<p>
+					Allow this site to collect usage data to improve your experience?
+				</p>
+			</div>
+			<div class="mdl-dialog__actions">
+				<button type="button" class="mdl-button close">OK</button>
+			</div>
+		</dialog>
+
+		<dialog class="mdl-dialog" id="history-dialog">
+			<div class="mdl-dialog__content">
+				<p>
+					Tafl (or hnefatafl-) games are a family of checkered board games originating in Scandinavia.
+					The game was spread through Europe through the Viking influence.  Many versions of the game exist,
+					and no universal rules exist.  The game isn't very popular in the present day (until now :-))
+					More information can be found <a href="https://en.wikipedia.org/wiki/Tafl_games">here</a>.
+
+					The rule set for this specific tafl game is not one of the standard rule set, but it is made to
+					maximize equality among the attacker and defender.
+				</p>
+			</div>
+			<div class="mdl-dialog__actions">
+				<button type="button" class="mdl-button close">OK</button>
+			</div>
+		</dialog>
+
+		<dialog class="mdl-dialog" id="about-dialog">
+			<div class="mdl-dialog__content">
+				<p>
+					Allow this site to collect usage data to improve your experience?
+					<a href="https://github.com/vssrcj/hnefatafl-game">GITHUB link</a>
+				</p>
+			</div>
+			<div class="mdl-dialog__actions">
+				<button type="button" class="mdl-button close">OK</button>
+			</div>
+		</dialog>
 
 
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-		<!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script> -->
-		<!-- <script src="http://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.js"></script> -->
-	 	<script src="modules/google_auth.js"></script>
-		<script src="modules/google_api.js"></script>
-		<script src="modules/profile.js"></script>
-		<script src="modules/board.js"></script>
+		<script src="content/scripts.min.js"></script>
 		<script>
 			function init() {
 				google_auth.loadModules();
@@ -71,4 +102,4 @@
 		<script src="https://apis.google.com/js/client.js?onload=init"></script>
 
 	</body>
-</head>
+</html>

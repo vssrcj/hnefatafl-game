@@ -71,5 +71,10 @@ var google_apis = (function() {
             board.game_end(parseInt(response.game_state));
          });
       }
-      return {new_game, player_move, ai_move, last_player_game};
+      return {
+         new_game: new_game,
+         player_move: player_move,
+         ai_move: ai_move,
+         last_player_game: last_player_game
+      };
 })();

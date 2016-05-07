@@ -16,11 +16,25 @@ class StringMessage(messages.Message):
     message = messages.StringField(1)
 
 
-class GameShort(messages.Message):
+class GameShortForm(messages.Message):
     """Single outbound string message"""
     key = messages.StringField(1)
     state = messages.IntegerField(2)
-    modified = messages.StringField(3)
+    player_email = messages.StringField(3)
+
+
+class PlayerScore(messages.Message):
+    email = messages.StringField(1)
+    win_percentage = messages.FloatField(2)
+    games_played = messages.IntegerField(3)
+
+
+class PlayerScores(messages.Message):
+    players = messages.MessageField(PlayerScore, 1, repeated=True)
+
+
+class PlayerGames(messages.Message):
+    games = messages.MessageField(GameShortForm, 1, repeated=True)
 
 
 class PlayResult(messages.Message):
