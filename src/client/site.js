@@ -1,3 +1,0 @@
-function init() {
-   auth.loadModules();
-}

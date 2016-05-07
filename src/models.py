@@ -61,7 +61,8 @@ class Player(ndb.Model):
                 if state == 2:
                     wins += 1
                     losses += 1
-            win_percentage = float(wins)/(wins + losses) if (wins or losses) else 0
+            win_percentage = float(wins)/(wins + losses) \
+                if (wins or losses) else 0
 
             scores.append((win_percentage, games, player.email))
         scores.sort(key=lambda x: (-x[0], x[1]))
