@@ -56,6 +56,13 @@ var board = (function() {
 
    }
 
+   function reset() {
+      if($selected) {
+         $selected.attr('class','attacker');
+         $selected = null;
+      }
+   }
+
    function game_end(game_state) {
       if(game_state == 2 || game_state == 3) {
          if(game_state == 2){
@@ -99,10 +106,7 @@ var board = (function() {
 
    function move(origin_value, origin, destination, captures) {
 
-      if($selected) {
-         $selected.attr('class','attacker');
-         $selected = null;
-      }
+
 
       var or = document.getElementById(origin);
       var $or = $(or);
@@ -161,6 +165,7 @@ var board = (function() {
       empty_board: empty_board,
       new_board: new_board,
       move: move,
-      game_end: game_end
+      game_end: game_end,
+      reset: reset
    };
 })();

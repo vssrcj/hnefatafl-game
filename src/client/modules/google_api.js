@@ -4,7 +4,7 @@ var google_apis = (function() {
 
    function new_game() {
       gapi.client.hnefatafl.new_game().execute(function(response){
-         console.log(response);
+
          KEY = response.key;
          board.new_board(JSON.parse(response.board));
          ai_move();
@@ -40,20 +40,22 @@ var google_apis = (function() {
             "destination_row": destinations[0],
             "destination_column": destinations[1]
          }).execute(function(response){
-
-            board.move(
-               response.origin_value,
-               response.origin,
-               response.destination,
-               response.captures != "[]" ?
-               JSON.parse(
-                  response.captures.replace('(','[').replace(')',']')
-               ): null
-            );
-            if(!board.game_end(parseInt(response.game_state))) {
-               ai_move();
+            board.reset()
+   console.log(response);
+            if(!response.code)  {
+               board.move(
+                  response.origin_value,
+                  response.origin,
+                  response.destination,
+                  response.captures != "[]" ?
+                  JSON.parse(
+                     response.captures.replace('(','[').replace(')',']')
+                  ): null
+               );
+               if(!board.game_end(parseInt(response.game_state))) {
+                  ai_move();
+               }
             }
-
          });
       }
       catch(err) {

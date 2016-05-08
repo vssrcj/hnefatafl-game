@@ -29,4 +29,4 @@ class SendReminderEmail(webapp2.RequestHandler):
 
 CRON = webapp2.WSGIApplication([
     ('/crons/send_reminder', SendReminderEmail),
-], debug=False)
+], debug=True)
