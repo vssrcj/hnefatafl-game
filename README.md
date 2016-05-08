@@ -17,15 +17,15 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 * The board consists of 9x9 squares/cells. 
   
-  Each cell's position is labeled as (row index, column index). *i.e.* the top left cell is **(0,0)** and the bottom right cell is **(8,8)**.  **The board values are store as an array of arrays**
+  Each cell's position is labeled as (row index, column index). *i.e.* the top left cell is **(0,0)** and the bottom right cell is **(8,8)**.  *The board values are store as an array of arrays*
 
   Each cell's value is represented as:
-  | Piece         | Value         |
-  | ------------- |:-------------:|
-  | Empty         | 0             |
-  | Attacker      | 1             |
-  | Defender      | 2             |
-  | King          | 3             |
+  Piece | Value
+  --- | ---
+  Empty | 0
+  Attacker | 1
+  Defender | 2
+  King | 3
   
 * You may make one move per turn.  You can move any of your pieces to any cell in a straight line.
 
