@@ -67,6 +67,7 @@ var google_apis = (function() {
          gapi.client.hnefatafl.ai_move({
             "game_key":KEY
          }).execute(function(response){
+            console.log(response);
             board.move(
                response.origin_value,
                response.origin,

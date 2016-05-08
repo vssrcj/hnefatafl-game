@@ -48,7 +48,7 @@ var board = (function() {
    function new_game() {
       $board.on('click','.row > div > div', onClick);
       google_apis.new_game();
-      $board_header.hide();
+      $board_header.addClass('hidden');
    }
    $new_game.on('click',new_game);
 

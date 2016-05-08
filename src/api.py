@@ -25,7 +25,7 @@ urlfetch.set_default_fetch_deadline(30)
     allowed_client_ids=[
         ("314272160250-ucrqg44c1oj9knlrfatqvqf1b3pm9819."
          "apps.googleusercontent.com"),
-        # endpoints.API_EXPLORER_CLIENT_ID  # comment out in production
+        endpoints.API_EXPLORER_CLIENT_ID  # comment out in production
         ],
     auth_level=endpoints.AUTH_LEVEL.OPTIONAL_CONTINUE,
     version='v1')
