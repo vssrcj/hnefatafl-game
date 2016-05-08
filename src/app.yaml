@@ -4,6 +4,11 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
+skip_files:
+   - client/node_modules*
+   - client/modules*
+   - ^(.*/)?.*\.py[co]$
+
 handlers:
 - url: /favicon\.ico
   static_files: favicon.ico
@@ -18,11 +23,13 @@ handlers:
 - url: /_ah/spi/.*
   script: api.API
 
+- url: /crons/send_reminder
+  script: main.CRON
+
 - url: .*
   script: client.APP
 
-- url: /crons/send_reminder
-  script: main.CRON
+
 
 libraries:
 - name: webapp2

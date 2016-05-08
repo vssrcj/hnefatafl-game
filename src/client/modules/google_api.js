@@ -4,6 +4,7 @@ var google_apis = (function() {
 
    function new_game() {
       gapi.client.hnefatafl.new_game().execute(function(response){
+         console.log(response);
          KEY = response.key;
          board.new_board(JSON.parse(response.board));
          ai_move();

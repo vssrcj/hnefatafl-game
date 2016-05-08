@@ -19,4 +19,4 @@ JINJA2 = jinja2.Environment(
 
 APP = webapp2.WSGIApplication([
     ('/', MainPage)
-], debug=True)
+], debug=False)

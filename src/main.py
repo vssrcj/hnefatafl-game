@@ -11,17 +11,22 @@ class SendReminderEmail(webapp2.RequestHandler):
         app_id = app_identity.get_application_id()
         users = Player.query()
         for user in users:
-            if user.latest_game().state in (0, 1):
-                subject = 'This is a reminder!'
-                body = 'Hello {}, try out Guess A Number!'.format(user.name)
-                # This will send test emails, the arguments to send_mail are:
-                # from, to, subject, body
-                mail.send_mail('noreply@{}.appspotmail.com'.format(app_id),
-                               user.email,
-                               subject,
-                               body)
+            if user.latest_game().state == 0:
+                message = mail.EmailMessage(
+                    sender='noreply@{}.appspotmail.com'.format(app_id),
+                    subject='Hnefatafl reminder'
+                    )
+                message.to = user.email
+                message.html = """
+                    Hello {}, <br/><br/> You are still playing a game in
+                    Hnefatafl. <br/>Head over to
+                    <a href="https://hnefatafl-game.appspot.com">
+                    hnefatafl-game.appspot.com</a>
+                    to play some more!
+                """.format(user.name)
+                message.send()
 
 
 CRON = webapp2.WSGIApplication([
     ('/crons/send_reminder', SendReminderEmail),
-], debug=True)
+], debug=False)

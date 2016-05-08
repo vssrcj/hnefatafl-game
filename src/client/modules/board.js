@@ -99,8 +99,10 @@ var board = (function() {
 
    function move(origin_value, origin, destination, captures) {
 
-      $selected.attr('class','attacker');
-      $selected = null;
+      if($selected) {
+         $selected.attr('class','attacker');
+         $selected = null;
+      }
 
       var or = document.getElementById(origin);
       var $or = $(or);
