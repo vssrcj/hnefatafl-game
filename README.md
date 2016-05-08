@@ -9,6 +9,8 @@ It also includes a client (web) platform, that consumes some of the endpoints, t
 You can find the web app [here](https://hnefatafl-game.appspot.com)
 and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
+[This](https://github.com/vssrcj/hnefatafl-game/blob/master/SETUP.md) is a simple guide to recreate this project.
+
 ## How to play
 
 * In this version you as the player (the attacker) face off against an AI (the defender).
@@ -94,3 +96,15 @@ If no parameter is defined, it means it accepts none
     * ```game_key```
   * Returns:
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
+    
+## CRON Job
+ **https://hnefatafl-game.appspot.com/crons/send_reminder**
+
+ If this link is accessed, it will send an email to all people whose turn it is to play of their latest game.  *Meaning the state of the game is 0*
+ 
+## Future
+
+* The CRON job will have more complex functionality
+* The AI will use machine learning
+* A player may be the defender or attacker
+* Refining the Web App
