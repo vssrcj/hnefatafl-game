@@ -188,7 +188,7 @@ class HnefataflAPI(remote.Service):
         response_message=PlayResult,
         path='player_move',
         name='player_move',
-        http_method='POST')
+        http_method='PUT')
     def player_move(self, request):
         """Make a move"""
 

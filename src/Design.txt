@@ -1,0 +1,55 @@
+What additional properties did you add to your models and why?
+
+-  Because a game can gave infinitely many turns, and has no concept of attempts,
+   the Game model doesn't have any of such properties.
+
+-  game_over is simply one state of the game. Since a Game object may be in any
+   one of 4 states, game_over is redefined as state.
+
+-  There is no Score model.  I didn't think it necessary to have a simple model
+   that has a one-to-one relationship with the Game model, and stored separately.
+   Furthermore, a score isn't clearly defined, not a critical part of the functionality,
+   and it won't be called upon often.  So now the score value will simply be calculated.
+
+-  Created and modified are extra properties added to Game.  This gives a better
+   understanding of each Game object.  It helps by giving a date sorted list of
+   games in player_games.  It is also used by last_player_game.
+
+-  board_values is needed to store the current board data of the games
+
+-  moves is implemented into Game.  This is a list so that each time player_move
+   or ai_move is called (each time a move occurs) that move is added to it.
+
+What were some of the trade-offs or struggles you faced when implementing the new game logic?
+
+-  board_values was a struggle.  At first I thought to create a ndb.Model for it,
+   but it was unnecessary to store data separately from something that is of one
+   concern (the Game model).  Now when board_values is retrieved from the datastore,
+   it is extended into a Python class, so that methods can interact with information
+   related to the board, and not the Game.
+
+-  Since the score system is simplified, no additional information needs to go to
+   the datastore for each move.  If the scoring system needs to be changes in
+   order to correctly calculate the player rankings, just one method in the Game
+   model needs to be changed.  If the endpoint that relies on these values needs
+   to be called often, a cached version of it can be created.
+
+-  The AI logic was harder to create than expected.
+
+-  It wasn't necessary to create a create_user endpoint.  Since the API requires
+   authorization, it is known who the user is for new_game.  If it is a new user,
+   that user will simply not be created.
+
+-  End game was not necessary.  In the process of playing the game, the game obtain
+   a certain state, which will 'end' the game.
+
+-  Cancel game was also not implemented.  Since a new game can be created at any
+   time, there is no need to cancel an old one.  The old games will simply stay
+   in the datastore, and will in essence be cancelled.
+   If it was a requirement though, it would've been as simple as adding a
+   new state to the game (state=5)
+
+-  last_player_game was added after creating the Web App frontend.  It is very
+   useful to get the details of the last game played.  The workaround to this
+   is to first get all the player's games, get the latest game's key, and then
+   get its details.
