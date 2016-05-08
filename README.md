@@ -31,7 +31,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 * You may make one move per turn.  You can move any of your pieces to any cell in a straight line.
 
 * To capture an opposition piece, you must move your pieces on the opposite of an opponent's.
-  *Note that if you move your piece inbetween two opponent pieces, it won't be captured.*
+  *Note that if you move your piece in-between two opponent pieces, it won't be captured.*
 
 * To capture the king, you must surround it on four sides by attacking pieces, or on three sides if the fourth side is occupied by a defender piece.
 
@@ -48,6 +48,23 @@ If no parameter is defined, it means it accepts none
     * ```board```         = the values of the board
     * ```state```         = the state of the game.  0: Player's turn. 1: AI's turn. 2: Player won. 3: AI won.
      
-* 
+* **ai_move**
+  * Instructs the AI to make a move
+  * Parameters:
+    * ```game_key```      = datastore id
+  * Returns the result of the AI move 
+    * ```origin_value```  = the value of the piece that is moved
+    * ```origin```        = the position of the cell that the piece is moved from
+    * ```destination```   = the position of the cell that the piece is moved to
+    * ```captures```      = a list of cell positions that are captured
+    * ```game_state```
+     
+* **player_move**
+  * Makes a move
+  * Parameters:
+    * ```game_key```
+    * ```origin_row```, ```origin_column``` = the column- and row index of the piece that will be moved
+    * ```destination_row```, ```destination_column``` = the column- and row index of cell that the piece will move to
+  * Returns the same data as *```ai_move```*
 
 
