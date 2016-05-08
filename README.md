@@ -20,6 +20,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
   Each cell's position is labeled as (row index, column index). *i.e.* the top left cell is **(0,0)** and the bottom right cell is **(8,8)**.  *The board values are store as an array of arrays*
 
   Each cell's value is represented as:
+  
   Piece | Value
   --- | ---
   Empty | 0
