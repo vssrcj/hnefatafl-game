@@ -3,6 +3,7 @@ var board = (function() {
    var $board = $("#board");
    var $board_header = $("#board_header");
    var $new_game = $("#new_game");
+   var $header_text = $("#header_text");
 
    const HEIGHT = 9;
    const WIDTH = 9;
@@ -66,12 +67,12 @@ var board = (function() {
    function game_end(game_state) {
       if(game_state == 2 || game_state == 3) {
          if(game_state == 2){
-            $board_header.append("Player won!");
+            $header_text.text("Player won!");
             $board_header.addClass("attacker-header");
          }
          else {
              $board_header.addClass("defender-header");
-             $board_header.append("AI won!");
+             $header_text.text("AI won!");
           }
          $board.off();
          $board_header.removeClass('hidden');
