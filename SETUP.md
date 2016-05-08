@@ -2,6 +2,17 @@
 
 It consists of two parts.  The API backend, and the Web App frontend.
 
+### Files included
+
+Under src/
+* ai.py : AI logic
+* api.py : API endpoints
+* models.py transport_models.py : Models
+* utils.py game_utils.py : Utils
+* main.py client.py : Handlers
+* app.yaml cron.yaml : Configurations
+* client/\*: Web App files
+
 ### Requirements
 
 * Python
