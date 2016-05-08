@@ -2,14 +2,11 @@
 
 from google.appengine.ext import ndb
 
-from transport_models import GameForm, PlayerScore, GameShortForm, PlayResult
+from transport_models import GameForm, GameShortForm, PlayResult
 
 from datetime import datetime
 import copy
 
-from game_checks import attacker_cell_score
-
-MAX_SCORE = 999
 
 BOARD_WIDTH = 9
 BOARD_HEIGHT = 9
@@ -62,7 +59,7 @@ class Player(ndb.Model):
                     wins += 1
                     losses += 1
             win_percentage = float(wins)/(wins + losses) \
-                if (wins or losses) else 0
+                if (wins or losses) else float(0)
 
             scores.append((win_percentage, games, player.email))
         scores.sort(key=lambda x: (-x[0], x[1]))
@@ -108,25 +105,15 @@ class Board():
         directions = ((-1, 0), (1, 0), (0, 1), (0, -1))
         for direction in directions:
             check = copy.deepcopy(origin)
-            while self[check] == 0:
+            while True:
+                check = (check[0] + direction[0], check[1] + direction[1])
+
                 if check == destination:
                     return True
-                check[0] += direction[0]
-                check[1] += direction[1]
+                if self[check] != 0:
+                    break
 
         return False
-
-    def player_move(self, origin, destination):
-        """ player won, captures """
-        score, captures = attacker_cell_score(
-            board=self, cell=destination)
-        print score
-        print captures
-        for capture in captures:
-            self[capture] = 0
-        self[origin] = 0
-        self[destination] = 1
-        return (True if score == MAX_SCORE else None, captures)
 
 
 class Game(ndb.Model):
@@ -151,7 +138,7 @@ class Game(ndb.Model):
     state = ndb.IntegerProperty(required=True)
     created = ndb.DateTimeProperty(required=True)
     modified = ndb.DateTimeProperty(required=True)
-    turn = ndb.IntegerProperty(required=True)
+    moves = ndb.PickleProperty(required=True)
 
     @classmethod
     def new_game(cls, player_key):
@@ -162,7 +149,8 @@ class Game(ndb.Model):
             ],
             state=1,
             created=datetime.now(),
-            modified=datetime.now()
+            modified=datetime.now(),
+            moves=[]
         )
         for y in range(BOARD_HEIGHT):
             for x in range(BOARD_WIDTH):
@@ -189,6 +177,25 @@ class Game(ndb.Model):
             player_email=self.player.get().email,
             state=self.state
         )
+
+    def add_move(self, board, player, won, origin, destination, captures):
+        if captures:
+            for cell in captures:
+                board[cell] = 0
+
+        origin_value = board[origin]
+        board[origin] = 0
+        board[destination] = origin_value
+
+        if player:
+            self.state = 2 if won else 1
+        else:
+            self.state = 3 if won else 0
+        self.moves.append(
+            (origin_value, origin, destination, captures, self.state))
+        self.modified = datetime.now()
+        self.put()
+        return origin_value
 
     @classmethod
     def get_play_result(

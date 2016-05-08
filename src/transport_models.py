@@ -45,6 +45,10 @@ class PlayResult(messages.Message):
     game_state = messages.IntegerField(5)
 
 
+class PlayResults(messages.Message):
+    results = messages.MessageField(PlayResult, 1, repeated=True)
+
+
 GAME_REQUEST = endpoints.ResourceContainer(
     game_key=messages.StringField(1))
 

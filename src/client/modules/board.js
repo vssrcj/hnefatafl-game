@@ -34,11 +34,10 @@ var board = (function() {
       }
       else if($selected){
          if(type == "empty") {
-            google_apis.player_move(
+            var result = google_apis.player_move(
                $selected.attr('id'),
                $cell.attr('id')
             );
-            $selected = null;
          }
          else {
             $selected.attr('class','attacker');
@@ -47,11 +46,12 @@ var board = (function() {
       }
    }
    function new_game() {
-         $board.on('click','.row > div > div', onClick);
+      $board.on('click','.row > div > div', onClick);
       google_apis.new_game();
       $board_header.hide();
    }
    $new_game.on('click',new_game);
+
    function cellClick(target, params) {
 
    }
@@ -98,6 +98,10 @@ var board = (function() {
    }
 
    function move(origin_value, origin, destination, captures) {
+
+      $selected.attr('class','attacker');
+      $selected = null;
+
       var or = document.getElementById(origin);
       var $or = $(or);
       $or.attr('class',typeNames[0]);
@@ -111,7 +115,6 @@ var board = (function() {
          for(var i=0; i< captures.length; i++) {
             f = captures[i][0];
             t = captures[i][1];
-            console.log(f);
             var ca = document.getElementById(f + "," + t);
             var $ca = $(ca);
             $ca.attr('class',typeNames[0]);

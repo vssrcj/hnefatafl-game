@@ -1,27 +1,18 @@
-# from transport_models import ReturnMessage
-
 import random
 import copy
 
-from game_checks import attacker_cell_score
-
-MAX_SCORE = 999
+from game_utils import attacker_cell_score, MAX_SCORE
 
 
 def ai_move(board):
-    """ ai won, origin, destination, captures """
+    """ Returns:
+            has AI won, origin, destination, captures
+    """
     move = get_best_move(board, is_defender=True)
 
     if move:
         score, origin, destination, captures = move
 
-        if captures:
-            for cell in captures:
-                board[cell] = 0
-
-        origin_value = board[origin]
-        board[origin] = 0
-        board[destination] = origin_value
         return (True if score == MAX_SCORE else False,
                 origin, destination, captures)
     else:
@@ -29,7 +20,9 @@ def ai_move(board):
 
 
 def get_best_move(board, is_defender):
-    """ score, origin, destination, captures """
+    """ Returns:
+            score, origin, destination, captures
+    """
     check = 2 if is_defender else 1
     pieces = []
     king = None
@@ -71,7 +64,9 @@ def get_best_move(board, is_defender):
 
 
 def best_move_per_piece(board, origin, is_defender, is_king):
-    """ score, destination, captures """
+    """ Returns:
+            score, destination, captures
+    """
     directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
     scores = []
 
@@ -124,12 +119,10 @@ def king_at_edge(board, cell):
 
 
 def defender_cell_score(board, cell):
-    """ Get the score
-
-    Returns:
+    """ Returns:
             captures: A list of cells that are captured
             score: The score
-     """
+    """
     captures = []
     score = 0
     row, column = cell

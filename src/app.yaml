@@ -19,10 +19,10 @@ handlers:
   script: api.API
 
 - url: .*
-  script: main.APP
+  script: client.APP
 
 - url: /crons/send_reminder
-  script: main.APP
+  script: main.CRON
 
 libraries:
 - name: webapp2

@@ -1,54 +1,4 @@
-""""""
 MAX_SCORE = 999
-
-
-def check_move(cell_from, cell_to, board):
-
-    if not valid_move(cell_from, cell_to, board):
-        return False
-    score, captures = attacker_cell_score(board, cell_to[0], cell_to[1])
-    for capture in captures:
-        board[capture] = 0
-    board[cell_from] = 0
-    board[cell_to] = 1
-    return True if score >= 10 else None
-
-
-def valid_move(cell_from, cell_to, board):
-
-    if cell_from[0] == cell_to[0]:      # same row
-        if cell_from[1] < cell_to[1]:    # move right
-            check = cell_from[1] + 1
-            while check <= cell_to[1]:
-                if board[cell_from[0], check] != 0:
-                    return False
-                check += 1
-            return True
-
-        if cell_from[1] > cell_to[1]:    # move right
-            check = cell_from[1] - 1
-            while check >= cell_to[1]:
-                if board[cell_from[0], check] != 0:
-                    return False
-                check -= 1
-            return True
-
-    if cell_from[1] == cell_to[1]:      # same row
-        if cell_from[0] < cell_to[0]:    # move right
-            check = cell_from[0] + 1
-            while check <= cell_to[0]:
-                if board[check, cell_to[1]] != 0:
-                    return False
-                check += 1
-            return True
-        if cell_from[0] > cell_to[0]:    # move right
-            check = cell_from[0] - 1
-            while check >= cell_to[0]:
-                if board[check, cell_to[1]] != 0:
-                    return False
-                check -= 1
-            return True
-    return False
 
 
 def is_surrounded(u, r, d, l):
@@ -66,7 +16,9 @@ def is_surrounded(u, r, d, l):
 
 
 def attacker_cell_score(board, cell):
-    """ Returns score, captures """
+    """ Returns:
+            score, captures
+    """
     y, x = cell
     capture_king = False
     score = 0
