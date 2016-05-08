@@ -9,7 +9,7 @@ It also includes a client (web) platform, that consumes some of the endpoints, t
 You can find the web app [here](https://hnefatafl-game.appspot.com)
 and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
-[This](https://github.com/vssrcj/hnefatafl-game/blob/master/SETUP.md) is a simple guide to recreate this project.
+[This](https://github.com/vssrcj/hnefatafl-game/blob/master/SETUP.md) is a simple guide to set this project up.
 
 ## How to play
 
@@ -40,9 +40,11 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 ## API Endpoints
 
 Most of the endpoints require OAuth 2 autherization.  It will request the user's name and email address.
-If no parameter is defined, it means it accepts none
+If the user is not autherized, an exception will be thrown.
+If no parameter is defined, it means it accepts none.
+All the paths of the endpoints are the same as their names
 
-* **new_game**
+* **new_game** *POST*
   * Creates a new game for the current user.
   * Returns the details of the newly created game:
     * ```key```           = datastore id
@@ -50,38 +52,42 @@ If no parameter is defined, it means it accepts none
     * ```board```         = the values of the board
     * ```state```         = the state of the game.  0: Player's turn. 1: AI's turn. 2: Player won. 3: AI won.
      
-* **ai_move**
+* **ai_move** *GET*
   * Instructs the AI to make a move
   * Parameters:
     * ```game_key```      = datastore id
-  * Returns the result of the AI move 
+  * Returns the result of the AI move.
     * ```origin_value```  = the value of the piece that was moved
     * ```origin```        = the position of the piece that was moved
     * ```destination```   = the position of where the piece is moved to
     * ```captures```      = a list of cell positions that were captured
     * ```game_state```
+      *  *An exception will be thrown if you're not the player of the game, if it's not the AI's turn, or if the game is over*
      
-* **player_move**
+* **player_move** *PUT*
   * Makes a move
   * Parameters:
     * ```game_key```
     * ```origin_row```, ```origin_column``` = the column- and row index of the piece that must be moved
     * ```destination_row```, ```destination_column``` = the column- and row index of where the piece must be moved to
   * Returns the same data as **```ai_move```**
+    * *An exception will be thrown if you're not the player of the game, if it's not the players's turn, or if the game is over*
 
-* **player_games**
+* **player_games** *GET*
   * Gets all of the current player's games
   * Returns:
     * ```games``` = A list of entries that consist of:
       * ```key```
       * ```state```
       * ```player_email```
+        *  *An exception will be thrown if you haven't created at least one game*
     
-* **last_player_game**
+* **last_player_game** *GET*
   * Gets the last game the user played
   * Returns the same data as **```new_game```**
+    *  *An exception will be thrown if you haven't created at least one game*
    
-* **player_rankings**
+* **player_rankings** *GET*
   * Gets all the players ordered by the best players first
   * Requires no autherization
   * Returns:
@@ -90,12 +96,13 @@ If no parameter is defined, it means it accepts none
       * ```win_percentage```
       * ```games_played```
 
-* **game_history**
+* **game_history** *GET*
   * Get the history of each move made for a game
   * Parameters:
     * ```game_key```
   * Returns:
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
+      * *An exception will be thrown if you're not the player of the game, or if the game is not found*
     
 ## CRON Job
  **https://hnefatafl-game.appspot.com/crons/send_reminder**
