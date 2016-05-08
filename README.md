@@ -53,18 +53,44 @@ If no parameter is defined, it means it accepts none
   * Parameters:
     * ```game_key```      = datastore id
   * Returns the result of the AI move 
-    * ```origin_value```  = the value of the piece that is moved
-    * ```origin```        = the position of the cell that the piece is moved from
-    * ```destination```   = the position of the cell that the piece is moved to
-    * ```captures```      = a list of cell positions that are captured
+    * ```origin_value```  = the value of the piece that was moved
+    * ```origin```        = the position of the piece that was moved
+    * ```destination```   = the position of where the piece is moved to
+    * ```captures```      = a list of cell positions that were captured
     * ```game_state```
      
 * **player_move**
   * Makes a move
   * Parameters:
     * ```game_key```
-    * ```origin_row```, ```origin_column``` = the column- and row index of the piece that will be moved
-    * ```destination_row```, ```destination_column``` = the column- and row index of cell that the piece will move to
-  * Returns the same data as *```ai_move```*
+    * ```origin_row```, ```origin_column``` = the column- and row index of the piece that must be moved
+    * ```destination_row```, ```destination_column``` = the column- and row index of where the piece must be moved to
+  * Returns the same data as **```ai_move```**
 
+* **player_games**
+  * Gets all of the current player's games
+  * Returns:
+    * ```games``` = A list of entries that consist of:
+      * ```key```
+      * ```state```
+      * ```player_email```
+    
+* **last_player_game**
+  * Gets the last game the user played
+  * Returns the same data as **```new_game```**
+   
+* **player_rankings**
+  * Gets all the players ordered by the best players first
+  * Requires no autherization
+  * Returns:
+    * ```players``` = A list of entries that consist of:
+      * ```email```
+      * ```win_percentage```
+      * ```games_played```
 
+* **game_history**
+  * Get the history of each move made for a game
+  * Parameters:
+    * ```game_key```
+  * Returns:
+    * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
