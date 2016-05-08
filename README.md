@@ -62,7 +62,7 @@ All the paths of the endpoints are the same as their names
     * ```destination```   = the position of where the piece is moved to
     * ```captures```      = a list of cell positions that were captured
     * ```game_state```
-      *  *An exception will be thrown if you're not the player of the game, if it's not the AI's turn, or if the game is over*
+  *  *An exception will be thrown if you're not the player of the game, if it's not the AI's turn, or if the game is over*
      
 * **player_move** *PUT*
   * Makes a move
@@ -71,7 +71,7 @@ All the paths of the endpoints are the same as their names
     * ```origin_row```, ```origin_column``` = the column- and row index of the piece that must be moved
     * ```destination_row```, ```destination_column``` = the column- and row index of where the piece must be moved to
   * Returns the same data as **```ai_move```**
-    * *An exception will be thrown if you're not the player of the game, if it's not the players's turn, or if the game is over*
+  * *An exception will be thrown if you're not the player of the game, if it's not the players's turn, or if the game is over*
 
 * **player_games** *GET*
   * Gets all of the current player's games
@@ -80,12 +80,12 @@ All the paths of the endpoints are the same as their names
       * ```key```
       * ```state```
       * ```player_email```
-        *  *An exception will be thrown if you haven't created at least one game*
+  *  *An exception will be thrown if you haven't created at least one game*
     
 * **last_player_game** *GET*
   * Gets the last game the user played
   * Returns the same data as **```new_game```**
-    *  *An exception will be thrown if you haven't created at least one game*
+  * *An exception will be thrown if you haven't created at least one game*
    
 * **player_rankings** *GET*
   * Gets all the players ordered by the best players first
@@ -102,7 +102,7 @@ All the paths of the endpoints are the same as their names
     * ```game_key```
   * Returns:
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
-      * *An exception will be thrown if you're not the player of the game, or if the game is not found*
+  * *An exception will be thrown if you're not the player of the game, or if the game is not found*
     
 ## CRON Job
  **https://hnefatafl-game.appspot.com/crons/send_reminder**
