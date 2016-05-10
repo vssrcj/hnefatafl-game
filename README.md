@@ -62,7 +62,7 @@ All the paths of the endpoints are the same as their names
     * ```board```         = the values of the board
     * ```state```         = the state of the game.  0: Player's turn. 1: AI's turn. 2: Player won. 3: AI won.
 
-* **ai_move** *GET*
+* **ai_move** *PUT*
   * Instructs the AI to make a move
   * Parameters:
     * ```game_key```      = datastore id
@@ -112,6 +112,14 @@ All the paths of the endpoints are the same as their names
     * ```game_key```
   * Returns:
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
+  * *An exception will be thrown if you're not the player of the game, or if the game is not found*
+
+* **cancel_gamey** *PUT*
+  * Cancels a specific game
+  * Parameters:
+    * ```game_key```
+  * Returns:
+    * ```message``` = A message if the game was cancelled successfully
   * *An exception will be thrown if you're not the player of the game, or if the game is not found*
 
 ## CRON Job
