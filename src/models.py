@@ -7,18 +7,19 @@ from transport_models import GameForm, GameShortForm, PlayResult
 from datetime import datetime
 import copy
 
-
+BOARD = [
+    [0, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 2, 0, 0, 0, 0],
+    [1, 0, 0, 0, 2, 0, 0, 0, 1],
+    [1, 1, 2, 2, 3, 2, 2, 1, 1],
+    [1, 0, 0, 0, 2, 0, 0, 0, 1],
+    [0, 0, 0, 0, 2, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0, 0]
+]
 BOARD_WIDTH = 9
 BOARD_HEIGHT = 9
-ATTACKERS = [
-    (0, 3), (0, 4), (0, 5), (1, 4),
-    (3, 0), (4, 0), (5, 0), (4, 1),
-    (3, 8), (4, 8), (5, 8), (4, 7),
-    (8, 3), (8, 4), (8, 5), (7, 4)]
-DEFENDERS = [
-    (2, 4), (3, 4), (4, 5), (4, 6), (5, 4), (6, 4), (4, 2), (4, 3)
-]
-KING = (4, 4)
 
 
 class Player(ndb.Model):
@@ -146,22 +147,12 @@ class Game(ndb.Model):
     def new_game(cls, player_key):
         game = Game(
             player=player_key,
-            board_values=[
-                [0 for x in range(BOARD_WIDTH)] for x in range(BOARD_HEIGHT)
-            ],
+            board_values=BOARD,
             state=1,
             created=datetime.now(),
             modified=datetime.now(),
             moves=[]
         )
-        for y in range(BOARD_HEIGHT):
-            for x in range(BOARD_WIDTH):
-                if (y, x) in ATTACKERS:
-                    game.board_values[y][x] = 1
-                elif (y, x) in DEFENDERS:
-                    game.board_values[y][x] = 2
-                elif (y, x) == KING:
-                    game.board_values[y][x] = 3
         game.put()
         return game
 
