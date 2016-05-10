@@ -15,7 +15,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 * The starting board:
 
-   ![Alt text](board.png "9x9 cells")
+   ![Alt text](src/board.png "9x9 cells")
 
    Each cell's position is referenced as (column, row), meaning the top left cell is (0, 0)
    and the bottom right is (8, 8)
@@ -35,7 +35,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 * You may make one move per turn.  You can move any of your pieces across any amount of empty cells straight line.
 
-* To capture an opposition piece, you must move your pieces on the opposite sides of an opponent's piece.
+* To capture an opposition piece, you must move your pieces to opposite sides of an opponent piece.
   *Note that if you move your piece in-between two opponent pieces, it won't be captured.*
 
 * The defender can move the king piece, but it cannot participate in captures.
@@ -62,7 +62,7 @@ All the paths of the endpoints are the same as their names
     * ```board```         = the values of the board
     * ```state```         = the state of the game.  0: Player's turn. 1: AI's turn. 2: Player won. 3: AI won.
 
-* **ai_move** *GET*
+* **ai_move** *PUT*
   * Instructs the AI to make a move
   * Parameters:
     * ```game_key```      = datastore id
@@ -84,7 +84,7 @@ All the paths of the endpoints are the same as their names
   * *An exception will be thrown if you're not the player of the game, if it's not the players's turn, or if the game is over*
 
 * **player_games** *GET*
-  * Gets all of the current player's games
+  * Gets all of the current player's active games
   * Returns:
     * ```games``` = A list of entries that consist of:
       * ```key```
@@ -112,6 +112,14 @@ All the paths of the endpoints are the same as their names
     * ```game_key```
   * Returns:
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
+  * *An exception will be thrown if you're not the player of the game, or if the game is not found*
+
+* **cancel_gamey** *PUT*
+  * Cancels a specific game
+  * Parameters:
+    * ```game_key```
+  * Returns:
+    * ```message``` = A message if the game was cancelled successfully
   * *An exception will be thrown if you're not the player of the game, or if the game is not found*
 
 ## CRON Job
