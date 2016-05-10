@@ -35,7 +35,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 * You may make one move per turn.  You can move any of your pieces across any amount of empty cells straight line.
 
-* To capture an opposition piece, you must move your pieces on the opposite sides of an opponent's piece.
+* To capture an opposition piece, you must move your pieces to opposite sides of an opponent piece.
   *Note that if you move your piece in-between two opponent pieces, it won't be captured.*
 
 * The defender can move the king piece, but it cannot participate in captures.
@@ -84,7 +84,7 @@ All the paths of the endpoints are the same as their names
   * *An exception will be thrown if you're not the player of the game, if it's not the players's turn, or if the game is over*
 
 * **player_games** *GET*
-  * Gets all of the current player's games
+  * Gets all of the current player's active games
   * Returns:
     * ```games``` = A list of entries that consist of:
       * ```key```
