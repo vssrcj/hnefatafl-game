@@ -13,29 +13,39 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 ## How to play
 
-* In this version you as the player (the attacker) face off against an AI (the defender).
-  The goal for the defender is to get the king piece to any edge cell of the board.
-  The goal for the attacker is to capture the king piece.
+* The starting board:
 
-* The board consists of 9x9 squares/cells. 
-  
-  Each cell's position is labeled as (row index, column index). *i.e.* the top left cell is **(0,0)** and the bottom right cell is **(8,8)**.  *The board values are store as an array of arrays*
+   ![Alt text](board.png "9x9 cells")
 
-  Each cell's value is represented as:
-  
-  Piece | Value
-  --- | ---
-  Empty | 0
-  Attacker | 1
-  Defender | 2
-  King | 3
-  
-* You may make one move per turn.  You can move any of your pieces to any cell in a straight line.
+   Each cell's position is referenced as (column, row), meaning the top left cell is (0, 0)
+   and the bottom right is (8, 8)
 
-* To capture an opposition piece, you must move your pieces on the opposite of an opponent's.
+   All non-transparent cells are pieces on the board.  They have the following values:
+
+   Piece | Colour | Value
+   --- | --- | ---
+   Attacker | Purple | 1
+   Defender | Brown | 2
+   King | Dark Brown | 3
+
+* Goal:
+   * In this version you as the player (the attacker) face off against an AI (the defender).
+   * The goal for the defender is to get the king piece to any edge cell of the board.
+   * The goal for the attacker is to capture the king piece.
+
+* You may make one move per turn.  You can move any of your pieces across any amount of empty cells straight line.
+
+* To capture an opposition piece, you must move your pieces on the opposite sides of an opponent's piece.
   *Note that if you move your piece in-between two opponent pieces, it won't be captured.*
 
+* The defender can move the king piece, but it cannot participate in captures.
+
 * To capture the king, you must surround it on four sides by attacking pieces, or on three sides if the fourth side is occupied by a defender piece.
+
+## Scoring
+
+Your score is calculated as by your win-percentage (total wins / (total wins + total losses)), and games played.
+Players are ranked first by their win-percentage, and then by the least amounts of games played.
 
 ## API Endpoints
 
@@ -51,7 +61,7 @@ All the paths of the endpoints are the same as their names
     * ```player_email```
     * ```board```         = the values of the board
     * ```state```         = the state of the game.  0: Player's turn. 1: AI's turn. 2: Player won. 3: AI won.
-     
+
 * **ai_move** *GET*
   * Instructs the AI to make a move
   * Parameters:
@@ -63,7 +73,7 @@ All the paths of the endpoints are the same as their names
     * ```captures```      = a list of cell positions that were captured
     * ```game_state```
   *  *An exception will be thrown if you're not the player of the game, if it's not the AI's turn, or if the game is over*
-     
+
 * **player_move** *PUT*
   * Makes a move
   * Parameters:
@@ -81,12 +91,12 @@ All the paths of the endpoints are the same as their names
       * ```state```
       * ```player_email```
   *  *An exception will be thrown if you haven't created at least one game*
-    
+
 * **last_player_game** *GET*
   * Gets the last game the user played
   * Returns the same data as **```new_game```**
   * *An exception will be thrown if you haven't created at least one game*
-   
+
 * **player_rankings** *GET*
   * Gets all the players ordered by the best players first
   * Requires no autherization
@@ -103,12 +113,12 @@ All the paths of the endpoints are the same as their names
   * Returns:
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
   * *An exception will be thrown if you're not the player of the game, or if the game is not found*
-    
+
 ## CRON Job
  **https://hnefatafl-game.appspot.com/crons/send_reminder**
 
  If this link is accessed, it will send an email to all people whose turn it is to play of their latest game.  *Meaning the state of the game is 0*
- 
+
 ## Future
 
 * The CRON job will have more complex functionality

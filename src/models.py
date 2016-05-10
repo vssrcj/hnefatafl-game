@@ -33,7 +33,8 @@ class Player(ndb.Model):
 
     def games(self):
         games = []
-        for game in Game.query(Game.player == self.key).order(-Game.modified):
+        for game in Game.query(Game.player == self.key, Game.state.IN([0, 1]))\
+                        .order(-Game.modified):
             games.append(game)
 
         return games
@@ -132,6 +133,7 @@ class Game(ndb.Model):
                 1: AI's turn
                 2: Player won
                 3: AI won
+                4: Cancelled
     """
     player = ndb.KeyProperty(required=True, kind=Player)
     board_values = ndb.PickleProperty(required=True)
@@ -162,6 +164,9 @@ class Game(ndb.Model):
                     game.board_values[y][x] = 3
         game.put()
         return game
+
+    def cancel(self):
+        self.state = 4
 
     def to_form(self):
         return GameForm(

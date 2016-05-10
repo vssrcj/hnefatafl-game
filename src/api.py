@@ -5,7 +5,7 @@ from protorpc import remote
 from models import Game, Player, Board
 from transport_models import (
     PlayerScore, PlayerScores, GameForm, PlayResult, PlayerGames, PlayResults,
-    PLAY_REQUEST, GAME_REQUEST)
+    StringMessage, PLAY_REQUEST, GAME_REQUEST)
 
 from game_utils import attacker_cell_score, MAX_SCORE
 
@@ -106,7 +106,7 @@ class HnefataflAPI(remote.Service):
 
         player = Player.query(Player.email == user.email()).get()
         if not player:
-            raise Player.new_player(user.nickname(), user.email())
+            player = Player.new_player(user.nickname(), user.email())
 
         game = Game.new_game(player_key=player.key)
         game.put()
@@ -119,7 +119,7 @@ class HnefataflAPI(remote.Service):
         name='game_history',
         http_method='GET')
     def game_history(self, request):
-        """Get the history of a game, old to new"""
+        """Get the history of a game, ranked from old to new"""
         user = endpoints.get_current_user()
         if not user:
             raise endpoints.UnauthorizedException('Authorization required')
@@ -150,7 +150,7 @@ class HnefataflAPI(remote.Service):
         response_message=PlayResult,
         path='ai_move',
         name='ai_move',
-        http_method='GET')
+        http_method='PUT')
     def ai_move(self, request):
         """Instruct the AI to make a move"""
         user = endpoints.get_current_user()
@@ -230,5 +230,28 @@ class HnefataflAPI(remote.Service):
         return game.get_play_result(
             origin_value, origin, destination, captures, game.state)
 
+    @endpoints.method(
+        request_message=GAME_REQUEST,
+        response_message=StringMessage,
+        path='cancel_game',
+        name='cancel_game',
+        http_method='PUT')
+    def cancel_game(self, request):
+        """Cancels a game"""
+        user = endpoints.get_current_user()
+        if not user:
+            raise endpoints.UnauthorizedException('Authorization required')
+
+        game = get_by_urlsafe(request.game_key, Game)
+        if not game:
+            raise endpoints.NotFoundException("Game not found")
+
+        player = Player.query(Player.email == user.email()).get()
+        if not player or player.key != game.player:
+            raise endpoints.UnauthorizedException(
+                'You are not the player for the game')
+
+        game.cancel()
+        return StringMessage(message="Successfully cancelled")
 
 API = endpoints.api_server([HnefataflAPI])

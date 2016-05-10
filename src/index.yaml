@@ -20,3 +20,10 @@ indexes:
   - name: player
   - name: modified
     direction: desc
+
+- kind: Game
+  properties:
+  - name: player
+  - name: state
+  - name: modified
+    direction: desc

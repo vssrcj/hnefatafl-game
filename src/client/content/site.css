@@ -8,6 +8,30 @@
    white-space: nowrap;
 }
 
+a {
+   color: blue;
+}
+
+#loader {
+   display:    none;
+ position:   fixed;
+ z-index:    1000;
+ top:        0;
+ left:       0;
+ height:     100%;
+ width:      100%;
+ background: rgba( 255, 255, 255, .2 )
+             url('http://i.stack.imgur.com/FhHRx.gif')
+             50% 50%
+             no-repeat;
+ overflow: hidden;
+}
+
+#loader.loading {
+   display: block;
+}
+
+
 
 .row > div {
    width: calc(4vw - 4px);

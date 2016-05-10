@@ -54,7 +54,26 @@
 		<dialog class="mdl-dialog" id="how-dialog">
 			<div class="mdl-dialog__content">
 				<p>
-					Allow this site to collect usage data to improve your experience?
+					<h5>Goal</h5>
+					<ul>
+						<li>In this version you as the player (the attacker) face off against an AI (the defender)</li>
+  					   <li>The goal for the defender is to get the king piece to any edge cell of the board</li>
+  					   <li>The goal for the attacker is to capture the king piece</li>
+					</ul>
+				</p>
+				<p>
+					You may make one move per turn.  You can move any of your pieces across any amount of empty cells straight line.
+				</p>
+				<p>
+					To capture an opposition piece, you must move your pieces on the opposite sides of an opponent's piece.
+					  <em>Note that if you move your piece in-between two opponent pieces, it won't be captured.</em>
+				</p>
+				<p>
+					The defender can move the king piece, but it cannot participate in captures.
+				</p>
+				<p>
+					To capture the king, you must surround it on four sides by attacking pieces, or on three sides if the fourth side is occupied by a defender piece.
+
 				</p>
 			</div>
 			<div class="mdl-dialog__actions">
@@ -67,9 +86,10 @@
 				<p>
 					Tafl (or hnefatafl-) games are a family of checkered board games originating in Scandinavia.
 					The game was spread through Europe through the Viking influence.  Many versions of the game exist,
-					and no universal rules exist.  The game isn't very popular in the present day (until now :-))
-					More information can be found <a href="https://en.wikipedia.org/wiki/Tafl_games">here</a>.
-
+					and no universal rules exist.
+					More information can be found <a href="https://en.wikipedia.org/wiki/Tafl_games" target="_blank">here</a>.
+				</p>
+				<p>
 					The rule set for this specific tafl game is not one of the standard rule set, but it is made to
 					maximize equality among the attacker and defender.
 				</p>
@@ -82,8 +102,8 @@
 		<dialog class="mdl-dialog" id="about-dialog">
 			<div class="mdl-dialog__content">
 				<p>
-					Allow this site to collect usage data to improve your experience?
-					<a href="https://github.com/vssrcj/hnefatafl-game">GITHUB link</a>
+					This is part of Udacity's Full Stack Nanodegree 4th project.  Find more info
+					<a href="https://github.com/vssrcj/hnefatafl-game" target="_blank">here</a>
 				</p>
 			</div>
 			<div class="mdl-dialog__actions">
@@ -91,7 +111,7 @@
 			</div>
 		</dialog>
 
-
+			<div id="loader"></div>
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script src="content/scripts.min.js"></script>
 		<script>

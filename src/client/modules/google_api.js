@@ -1,6 +1,7 @@
 var google_apis = (function() {
 
    var KEY = null;
+   var $loader = $("#loader");
 
    function new_game() {
       gapi.client.hnefatafl.new_game().execute(function(response){
@@ -28,8 +29,10 @@ var google_apis = (function() {
    }
 
    function player_move(origin, destination) {
+      $loader.addClass('loading');
       var origins = origin.split(',');
       var destinations = destination.split(',');
+
 
       try
       {
@@ -55,10 +58,16 @@ var google_apis = (function() {
                if(!board.game_end(parseInt(response.game_state))) {
                   ai_move();
                }
+               else {
+                  $loader.removeClass('loading');
+               }
             }
          });
       }
       catch(err) {
+
+      }
+      finally {
 
       }
    }
@@ -78,6 +87,7 @@ var google_apis = (function() {
                ): null
             );
             board.game_end(parseInt(response.game_state));
+            $loader.removeClass('loading');
          });
       }
       return {
