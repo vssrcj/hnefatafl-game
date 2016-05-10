@@ -44,7 +44,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 ## Scoring
 
-Your score is calculated as by your win-percentage (total wins / (total wins + total losses)), and games played.
+Your score is calculated by your win-percentage (total wins / (total wins + total losses)) and games played.
 Players are ranked first by their win-percentage, and then by the least amounts of games played.
 
 ## API Endpoints
@@ -114,7 +114,7 @@ All the paths of the endpoints are the same as their names
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
   * *An exception will be thrown if you're not the player of the game, or if the game is not found*
 
-* **cancel_gamey** *PUT*
+* **cancel_game** *PUT*
   * Cancels a specific game
   * Parameters:
     * ```game_key```
