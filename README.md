@@ -15,7 +15,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 * The starting board:
 
-   ![Alt text](board.png "9x9 cells")
+   ![Alt text](src/board.png "9x9 cells")
 
    Each cell's position is referenced as (column, row), meaning the top left cell is (0, 0)
    and the bottom right is (8, 8)
