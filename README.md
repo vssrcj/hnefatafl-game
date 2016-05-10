@@ -44,7 +44,7 @@ and the API Explorer [here](https://hnefatafl-game.appspot.com/_ah/api/explorer)
 
 ## Scoring
 
-Your score is calculated as by your win-percentage (total wins / (total wins + total losses)), and games played.
+Your score is calculated by your win-percentage (total wins / (total wins + total losses)) and games played.
 Players are ranked first by their win-percentage, and then by the least amounts of games played.
 
 ## API Endpoints
