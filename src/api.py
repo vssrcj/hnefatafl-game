@@ -167,10 +167,10 @@ class HnefataflAPI(remote.Service):
                 'You are not the player for the game')
 
         if game.state == 0:
-            raise endpoints.UnauthorizedException(
+            raise endpoints.ForbiddenException(
                 'It is the player\'s turn')
         if game.state != 1:
-            raise endpoints.UnauthorizedException(
+            raise endpoints.ForbiddenException(
                 'Game already over')
 
         board = Board(values=game.board_values)
@@ -207,10 +207,10 @@ class HnefataflAPI(remote.Service):
                 'You are not the player for the game')
 
         if game.state == 1:
-            raise endpoints.UnauthorizedException(
+            raise endpoints.ForbiddenException(
                 'It is the AI\'s turn')
         if game.state != 0:
-            raise endpoints.UnauthorizedException(
+            raise endpoints.ForbiddenException(
                 'Game already over')
 
         origin = (request.origin_row, request.origin_column)

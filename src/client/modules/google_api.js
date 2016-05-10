@@ -43,17 +43,17 @@ var google_apis = (function() {
             "destination_row": destinations[0],
             "destination_column": destinations[1]
          }).execute(function(response){
-            board.reset()
-   console.log(response);
+            board.reset();
+            var captures = response.captures != "[]" ?
+               response.captures.replace(/\(/g,'[').replace(/\)/g,']').replace(/ /g,'') :
+               null;
+               console.log(response);
             if(!response.code)  {
                board.move(
                   response.origin_value,
                   response.origin,
                   response.destination,
-                  response.captures != "[]" ?
-                  JSON.parse(
-                     response.captures.replace('(','[').replace(')',']')
-                  ): null
+                  JSON.parse(captures)
                );
                if(!board.game_end(parseInt(response.game_state))) {
                   ai_move();
@@ -76,15 +76,15 @@ var google_apis = (function() {
          gapi.client.hnefatafl.ai_move({
             "game_key":KEY
          }).execute(function(response){
-            console.log(response);
+            var captures = response.captures != "[]" ?
+               response.captures.replace(/\(/g,'[').replace(/\)/g,']').replace(/ /g,'') :
+               null;
+               console.log(response);
             board.move(
                response.origin_value,
                response.origin,
                response.destination,
-               response.captures != "[]" ?
-               JSON.parse(
-                  response.captures.replace('(','[').replace(')',']')
-               ): null
+               JSON.parse(captures)
             );
             board.game_end(parseInt(response.game_state));
             $loader.removeClass('loading');

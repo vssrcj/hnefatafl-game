@@ -120,9 +120,11 @@ var board = (function() {
       if(captures && captures[0]) {
 
          for(var i=0; i< captures.length; i++) {
+
             f = captures[i][0];
             t = captures[i][1];
             var ca = document.getElementById(f + "," + t);
+            console.log(f + "," + t);
             var $ca = $(ca);
             $ca.attr('class',typeNames[0]);
          }
