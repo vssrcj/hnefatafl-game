@@ -114,7 +114,7 @@ All the paths of the endpoints are the same as their names
     * ```results``` = A list of entries that consist of the same data as **```ai_move```** returned
   * *An exception will be thrown if you're not the player of the game, or if the game is not found*
 
-* **cancel_gamey** *PUT*
+* **cancel_game** *PUT*
   * Cancels a specific game
   * Parameters:
     * ```game_key```
