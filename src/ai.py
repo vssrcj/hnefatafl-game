@@ -1,3 +1,5 @@
+""" Contains all the AI logic """
+
 import random
 import copy
 
@@ -5,7 +7,13 @@ from game_utils import attacker_cell_score, MAX_SCORE
 
 
 def ai_move(board):
-    """ Returns:
+    """
+    The only method to be called externally.
+
+    It returns the best move the AI can make, and all the pieces that are
+    captured.
+
+    Returns:
             has AI won, origin, destination, captures
     """
     move = get_best_move(board, is_defender=True)
@@ -26,6 +34,7 @@ def get_best_move(board, is_defender):
     check = 2 if is_defender else 1
     pieces = []
     king = None
+    # Each movable piece's location is added to the pieces list
     for y, row in enumerate(board):
         for x, value in enumerate(row):
             if value == check:
@@ -33,6 +42,7 @@ def get_best_move(board, is_defender):
             elif is_defender and value == 3:
                 king = (y, x)
 
+    # Evaluate each piece with best_move_per_piece and adds to the scores list
     scores = []
     if king:
         move = best_move_per_piece(
@@ -54,6 +64,8 @@ def get_best_move(board, is_defender):
             score, destination, captures = move
 
             scores.append((score, piece, destination, captures))
+
+    # Sort the list by scores descending, and returns the top value
     if scores:
         random.shuffle(scores)
         scores.sort(key=lambda x: x[0], reverse=True)
@@ -70,6 +82,8 @@ def best_move_per_piece(board, origin, is_defender, is_king):
     directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
     scores = []
 
+    # Try all the possible moves that a piece can make, and evaluates it with
+    # either defender_cell_score, or attacker_cell_score.
     for direction in directions:
         check = copy.deepcopy(origin)
         while True:
@@ -84,6 +98,9 @@ def best_move_per_piece(board, origin, is_defender, is_king):
                 else:
                     scores.append((0, check, []))
             else:
+                # The first if will be called first, and in it, get_best_move
+                # will be executed.  Then the else will be executed within the
+                # recursion
                 if is_defender:
                     score, captures = defender_cell_score(board, cell=check)
                     new_board = board.copy()
@@ -108,6 +125,7 @@ def best_move_per_piece(board, origin, is_defender, is_king):
 
 
 def king_at_edge(board, cell):
+    """ Simply returns true if the king is at one of the edges of the board """
     row, column = cell
     if (board[row+1, column] is None or
         board[row-1, column] is None or

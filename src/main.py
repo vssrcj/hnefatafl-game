@@ -1,3 +1,5 @@
+""" Exposes the endpoint so the email cron job can be executed """
+
 import webapp2
 
 from google.appengine.api import mail, app_identity

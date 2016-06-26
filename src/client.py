@@ -1,3 +1,6 @@
+""" Expose the default '/' endpoint, and returns the index.html
+for the web application """
+
 import os
 
 import jinja2

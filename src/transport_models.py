@@ -1,4 +1,4 @@
-""" asdf """
+""" All the request or response messages """
 from protorpc import messages
 import endpoints
 

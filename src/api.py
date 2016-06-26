@@ -1,4 +1,5 @@
-# Use for endpoints
+""" This file contains all the endpoints for the App Engine APIs """
+
 import endpoints
 from protorpc import remote
 

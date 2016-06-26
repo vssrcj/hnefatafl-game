@@ -1,7 +1,11 @@
+""" Utilites used by different files """
+
+# Just a large number to signal an unbeatable move
 MAX_SCORE = 999
 
 
 def is_surrounded(u, r, d, l):
+    """ Used to check if the king is surrounded by enemies """
     friend_side = False
     sides_surrounded = 0
 
@@ -24,6 +28,8 @@ def attacker_cell_score(board, cell):
     score = 0
     captures = []
 
+    # This section is just to save certain values into variables to clean up
+    # the logic bit. (u: up, r: right, l: left, d: down)
     u = board[y-1, x]
     u2 = board[y-2, x] if u is not None else None
 

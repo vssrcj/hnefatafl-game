@@ -1,4 +1,4 @@
-"""A setuptools-based script for installing Pulp Smash. """
+""" All the models that are saved in the DataStore """
 
 from google.appengine.ext import ndb
 
@@ -69,6 +69,8 @@ class Player(ndb.Model):
 
 
 class Board():
+    """ Takes a list of two-dimensional values, and creates a model.  This is
+    never saved but it makes working with the data easier"""
     def __init__(self, values):
         self.values = values
         self.current = 0
@@ -123,7 +125,7 @@ class Game(ndb.Model):
     Game object
 
     player: The current player object
-    board:  An array to represent each cell of the board
+    board_values:  A list to represent each cell of the board
                 0: Empty
                 1: Player's piece
                 2: AI's piece
@@ -135,6 +137,7 @@ class Game(ndb.Model):
                 2: Player won
                 3: AI won
                 4: Cancelled
+    moves: The history of moves
     """
     player = ndb.KeyProperty(required=True, kind=Player)
     board_values = ndb.PickleProperty(required=True)
